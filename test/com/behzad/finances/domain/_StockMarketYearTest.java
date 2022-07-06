@@ -1,9 +1,5 @@
 package com.behzad.finances.domain;
 
-import com.behzad.finances.domain.Dollars;
-import com.behzad.finances.domain.InterestRate;
-import com.behzad.finances.domain.StockMarketYear;
-import com.behzad.finances.domain.TaxRate;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -25,26 +21,62 @@ public class _StockMarketYearTest {
         assertEquals("capital gains tax rate", CAPITAL_GAINS_TAX_RATE, year.capitalGainsTaxRate());
         assertEquals("total withdrawn default", new Dollars(0),year.totalWithdrawn());
     }
+    @Test
+    public void totalSold(){
+        StockMarketYear year = newYear();
+        assertEquals("nothing sold", new Dollars(0),year.totalSold());
+        year.sell(new Dollars(3000));
+        assertEquals("one thing sold",new Dollars(3000), year.totalSold());
+        year.sell(new Dollars(750));
+        year.sell(new Dollars(1350));
+        assertEquals("multiple sales", new Dollars(5100), year.totalSold());
+    }
 
     @Test
     public void capitalGainsTax(){
         StockMarketYear year =  newYear();
-        year.withdraw(new Dollars(4000));
-        assertEquals("capital gains tax include tax on withdrawal to cover capital gains", new Dollars(333), year.capitalGainsTaxIncurred());
-        assertEquals("total withdrawn includes capital gains tax", new Dollars(4333), year.totalWithdrawn());
+        year.sell(new Dollars(4000));
+        assertEquals("capital gains tax include tax on withdrawal to cover capital gains", new Dollars(1333), year.capitalGainsTaxIncurred());
+        assertEquals("total withdrawn includes capital gains tax", new Dollars(5333), year.totalWithdrawn());
+    }
+
+    @Test
+    public void treatAllWithdrawalsAsSubjectToCapitalGainsTaxUntilAllCapitalGainsHaveBeenSold(){
+        StockMarketYear year =  newYear();
+        Dollars capitalGains = STARTING_BALANCE.minus(STARTING_PRINCIPAL);
+        year.sell(new Dollars(500));
+        assertEquals("pay tax on all entire withdrawal", new Dollars(167), year.capitalGainsTaxIncurred());
+        year.sell(capitalGains);
+        assertEquals("pay compounding tax  on capital gains even though that extra tax even when compounded amount is not capital gains",new Dollars(2333),year.capitalGainsTaxIncurred());
+        year.sell(new Dollars(1000));
+        assertEquals("pay no more tax once all capital gains withdrawn",new Dollars(2333),year.capitalGainsTaxIncurred());
     }
 
     @Test
     public void interestEarned(){
-        StockMarketYear year =  newYear();
+        StockMarketYear year = newYear();
         assertEquals("basic interest earned", new Dollars(1000),year.appreciation());
-        year.withdraw(new Dollars(2000));
-        assertEquals("withdrawal don't earn interest", new Dollars(800),year.appreciation());
-        year.withdraw(new Dollars(2000));
-        assertEquals("capital gains tax withdrawals don't earn tax",new Dollars(566), year.appreciation());
+        year.sell(new Dollars(2000));
+        assertEquals("withdrawal (which pay capital gains tax) don't earn interest", new Dollars(733),year.appreciation());
+    }
+    @Test
+    public void endingPrincipal(){
+        StockMarketYear year = newYear();
+        // Dollars capitalGains = STARTING_BALANCE.minus(STARTING_PRINCIPAL);
+        year.sell(new Dollars(500));
+        assertEquals( "withdrawals less than capital gains don't reduce principle",STARTING_PRINCIPAL, year.endingPrincipal());
+        year.sell(new Dollars(6500));
+        Dollars totalWithdrawn = new Dollars(9333);
+        Dollars capitalGains = new Dollars(7000);
+        Dollars principalReducedBy= totalWithdrawn.minus(capitalGains);
+        Dollars expectedPrincipal =STARTING_PRINCIPAL.minus(principalReducedBy);
+        assertEquals("principle should be reduced by difference between total withdrawals and capital gains",expectedPrincipal, year.endingPrincipal());
+        year.sell(new Dollars(1000));
+        assertEquals("principal goes negative when we are overdrawn",new Dollars(-333), year.endingPrincipal());
     }
 
-    @Test
+    /*@Test
+    @Ignore
     public void endingPrincipal(){
         StockMarketYear year =newYear();
         year.withdraw(new Dollars(1000));
@@ -53,16 +85,14 @@ public class _StockMarketYearTest {
         assertEquals("ending principal considers total multiple withdrawal", new Dollars(1500), year.endingPrincipal());
         year.withdraw(new Dollars(3000));
         assertEquals("ending principal neve goes below zero",new Dollars(0),year.endingPrincipal());
-    }
+    }*/
 
     @Test
     public void endingBalance(){
         StockMarketYear year =newYear();
         assertEquals("ending balance includes interest",new Dollars(11000), year.endingBalance());
-        year.withdraw(new Dollars(1000));
-        assertEquals("ending balance includes withdrawal",new Dollars(9900),year.endingBalance());
-        year.withdraw(new Dollars(3000));
-        assertEquals(" ending balance include capital gains tax withdrawals",new Dollars(6233),year.endingBalance());
+        year.sell(new Dollars(1000));
+        assertEquals("ending balance includes withdrawal (which pay capital gain tax) and interest",new Dollars(9533),year.endingBalance());
     }
 
     @Test
@@ -77,9 +107,10 @@ public class _StockMarketYearTest {
     }
 
     @Test
+    @Ignore
     public void withdrawnFundsDoNotEarnInterest(){
         StockMarketYear year = newYear();
-        year.withdraw(new Dollars(1000));
+        year.sell(new Dollars(1000));
         assertEquals(new Dollars(900), year.appreciation());
     }
 

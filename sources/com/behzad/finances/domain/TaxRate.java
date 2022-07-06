@@ -1,27 +1,30 @@
 package com.behzad.finances.domain;
 
 
+import com.behzad.finances.util.Require;
+
 import java.util.Objects;
 
 public class TaxRate {
 
-    private double rate;
+    private double rateAsPercentage;
 
     public TaxRate(double rateAsPercentage) {
-        this.rate = rateAsPercentage / 100.0;
+        Require.that(rateAsPercentage > 0 , "tax rate must be positive; was" + rateAsPercentage);
+        this.rateAsPercentage = rateAsPercentage;
     }
     public Dollars simpleTaxFor(Dollars amount){
-        return new Dollars((int) (rate * amount.toInt()));
+        return amount.percentage(rateAsPercentage);
     }
 
     public Dollars compoundTaxFor(Dollars amount) {
-        int amountAsInt = amount.toInt();
-        return new Dollars((int)((amountAsInt / (1 - rate)) - amountAsInt));
+        double compoundRate = (100.0 /(100.0 -rateAsPercentage)) - 1;
+        return amount.percentage(compoundRate * 100);
     }
 
     @Override
     public String toString(){
-        return (rate * 100) +"%";
+        return (rateAsPercentage) +"%";
     }
 
     @Override
@@ -29,11 +32,11 @@ public class TaxRate {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TaxRate taxRate = (TaxRate) o;
-        return Double.compare(taxRate.rate, rate) == 0;
+        return Double.compare(taxRate.rateAsPercentage, rateAsPercentage) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rate);
+        return Objects.hash(rateAsPercentage);
     }
 }

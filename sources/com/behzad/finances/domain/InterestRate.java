@@ -1,22 +1,25 @@
 package com.behzad.finances.domain;
 
+import com.behzad.finances.util.Require;
+
 import java.util.Objects;
 
 public class InterestRate {
 
-    private  double rate;
+    private  double rateAsPercentage;
 
     public InterestRate(double rateAsPercentage){
-      rate =rateAsPercentage/100;
+        Require.that(rateAsPercentage > 0 , "tax rate must be positive; was" + rateAsPercentage);
+        this.rateAsPercentage =rateAsPercentage;
     }
 
     public Dollars interestOn(Dollars amount){
-        return new Dollars((int)(amount.toInt() * rate));
+        return amount.percentage(rateAsPercentage);
     }
 
     @Override
     public String toString(){
-       return (rate * 100) + "%";
+       return rateAsPercentage + "%";
     }
 
     @Override
@@ -24,11 +27,11 @@ public class InterestRate {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InterestRate that = (InterestRate) o;
-        return Double.compare(that.rate, rate) == 0;
+        return Double.compare(that.rateAsPercentage, rateAsPercentage) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rate);
+        return Objects.hash(rateAsPercentage);
     }
 }

@@ -8,12 +8,6 @@ import static org.junit.Assert.*;
 public class _TaxRateTest {
 
     @Test
-    public void nothing(){
-        TaxRate taxRate= new TaxRate(0);
-        assertEquals(new Dollars(0),taxRate.simpleTaxFor(new Dollars(1000)));
-        assertEquals(new Dollars(0),taxRate.compoundTaxFor(new Dollars(1000)));
-    }
-    @Test
     public void simpleTaxJustAppliesTaxRateToAmount(){
         TaxRate taxRate= new TaxRate(25);
         assertEquals(new Dollars(250),taxRate.simpleTaxFor(new Dollars(1000)));

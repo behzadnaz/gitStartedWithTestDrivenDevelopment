@@ -14,7 +14,7 @@ public class _RequireTest {
             fail("expected exception");
         }
         catch (RequireException e){
-            assertEquals("same message", e.getMessage());
+            assertEquals("some message", e.getMessage());
         }
     }
 }

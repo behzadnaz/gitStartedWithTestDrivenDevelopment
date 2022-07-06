@@ -1,10 +1,7 @@
 package com.behzad.finances.domain;
 
-import com.behzad.finances.domain.Dollars;
-import com.behzad.finances.domain.InterestRate;
-import com.behzad.finances.domain.StockMarket;
-import com.behzad.finances.domain.TaxRate;
 import org.junit.*;
+
 import static org.junit.Assert.*;
 
 public class _StockMarketTest {
@@ -18,11 +15,28 @@ public class _StockMarketTest {
 
     @Test
     public void stockMarketContainsMultipleYears(){
-        StockMarket account = new StockMarket(STARTING_YEAR, ENDING_YEAR,STARTING_BALANCE,STARTING_PRINCIPAL, INTEREST_RATE,CAPITAL_GAINS_TAX_RATE);
+        StockMarket account = new StockMarket(STARTING_YEAR, ENDING_YEAR,STARTING_BALANCE,STARTING_PRINCIPAL, INTEREST_RATE,CAPITAL_GAINS_TAX_RATE, new Dollars(0));
         assertEquals("# of years", 41, account.numberOfYears());
         assertEquals(STARTING_BALANCE, account.getYearOffset(0).startingBalance());
         assertEquals(new Dollars(11000), account.getYearOffset(1).startingBalance());
         assertEquals(new Dollars(12100), account.getYearOffset(2).startingBalance());
         assertEquals(new Year(2050), account.getYearOffset(40).year());
+    }
+    @Test
+    public void stockMarketWithdrawAStandardAmountEveryYear(){
+        StockMarket account = new StockMarket(STARTING_YEAR,ENDING_YEAR,STARTING_BALANCE,STARTING_PRINCIPAL, INTEREST_RATE,CAPITAL_GAINS_TAX_RATE, new Dollars(10));
+        assertEquals("year 0", new Dollars(10), account.getYearOffset(0).totalSold());
+        assertEquals("year 1", new Dollars(10),account.getYearOffset(1).totalSold());
+        assertEquals("year 40", new Dollars(10),account.getYearOffset(40).totalSold());
+    }
+    @Test
+    public void noCumulativeRoundingErrorInInterestCalculation(){
+        StockMarket account = new StockMarket(STARTING_YEAR,ENDING_YEAR,STARTING_BALANCE,STARTING_PRINCIPAL,INTEREST_RATE,CAPITAL_GAINS_TAX_RATE, new Dollars(0));
+        assertEquals(new Dollars(497852), account.getYearOffset(40).endingBalance());
+    }
+    @Test
+    public void capitalGainsTaxCalculationWorksTheSameWayAsSpreadSheet(){
+        StockMarket account = new StockMarket(STARTING_YEAR,ENDING_YEAR,STARTING_BALANCE,STARTING_PRINCIPAL,INTEREST_RATE,CAPITAL_GAINS_TAX_RATE, new Dollars(0));
+        assertEquals(new Dollars(497852), account.getYearOffset(40).endingBalance());
     }
 }

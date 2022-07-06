@@ -1,7 +1,6 @@
 package com.behzad.finances.ui;
 
 import com.behzad.finances.domain.*;
-import com.behzad.finances.ui.StockMarketTableModel;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -15,7 +14,7 @@ public class _StockMarketTableModelTest {
 
     @Before
     public void setup(){
-        StockMarket market = new StockMarket(STARTING_YEAR, ENDING_YEAR, STARTING_BALANCE, STARTING_PRINCIPAL, new InterestRate(10), new TaxRate(25));
+        StockMarket market = new StockMarket(STARTING_YEAR, ENDING_YEAR, STARTING_BALANCE, STARTING_PRINCIPAL, new InterestRate(10), new TaxRate(25), new Dollars(0));
         model =new StockMarketTableModel(market);
     }
     @Test

@@ -2,6 +2,7 @@ package com.behzad.finances.ui;
 
 import com.behzad.finances.domain.StockMarket;
 import com.behzad.finances.domain.StockMarketYear;
+import com.behzad.finances.util.UnreachableCodeException;
 
 import javax.swing.table.*;
 
@@ -44,7 +45,7 @@ public class StockMarketTableModel extends AbstractTableModel {
             case 3: return currentYear.totalWithdrawn();
             case 4: return currentYear.appreciation();
             case 5: return currentYear.endingBalance();
-            default:return "";
+            default:throw new UnreachableCodeException();
         }
     }
 }

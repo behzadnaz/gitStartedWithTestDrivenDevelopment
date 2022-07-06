@@ -1,45 +1,52 @@
 package com.behzad.finances.domain;
 
-import java.util.Objects;
-
 public class Dollars {
 
-    private int amount;
+    private double amount;
 
-    public Dollars(int amount){
+    public Dollars (int amount){
+        this.amount = (double) amount;
+    }
+
+    public Dollars(double amount){
         this.amount = amount;
     }
-    public int toInt(){
-        return amount;
-    }
-    public Dollars add(Dollars dollars) {
+    public Dollars plus(Dollars dollars) {
         return new Dollars(this.amount + dollars.amount);
     }
 
-    public Dollars subtract(Dollars dollars) {
+    public Dollars minus(Dollars dollars) {
         return new Dollars(this.amount - dollars.amount);
     }
     public Dollars subtractToZero(Dollars dollars) {
-        int result = this.amount -dollars.amount;
+        double result = this.amount -dollars.amount;
         return new Dollars(Math.max(0, result));
     }
+    public Dollars percentage(double percent) {
+        return new Dollars(amount * percent / 100.0);
+    }
 
+    public static Dollars min(Dollars value1, Dollars value2) {
+        return new Dollars(Math.min(value1.amount, value2.amount));
+    }
+
+    private long roundOffPennies() {
+        return Math.round(this.amount);
+    }
     @Override
     public String toString() {
-        return "$" + amount;
+        return "$" + roundOffPennies();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Dollars dollars = (Dollars) o;
-        return amount == dollars.amount;
+        Dollars that = (Dollars) o;
+        return this.roundOffPennies() == that.roundOffPennies();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amount);
+        return (int)roundOffPennies();
     }
 
 
