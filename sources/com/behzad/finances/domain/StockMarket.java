@@ -22,6 +22,7 @@ public class StockMarket {
         for (int i = 1 ; i< numberOfYears(); i++){
             years[i] = years[i-1].nextYear();
             years[i].sell(sellEveryYear);
+
         }
     }
 
