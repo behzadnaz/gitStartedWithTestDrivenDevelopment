@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="ApprovalTests">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/sources/com/behzad/spikes/swt/ApprovalTests/ApprovalTests.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/sources/com/behzad/spikes/swt/ApprovalTests/ApprovalTests.jar!/" />
+    </SOURCES>
+  </library>
+</component>
