@@ -1,13 +1,14 @@
 package com.behzad.finances;
 
 import com.behzad.finances.domain.*;
-import com.behzad.finances.ui.Forecast;
+import com.behzad.finances.ui.ApplicationFrame;
+import com.behzad.finances.ui.ForecastTable;
 import com.behzad.finances.ui.StockMarketTableModel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class Application extends JFrame {
+public class Application extends ApplicationFrame {
 
     public Application(){
         this.setSize(900,400);
@@ -19,7 +20,7 @@ public class Application extends JFrame {
 
     private JScrollPane table() {
         StockMarketTableModel model = new StockMarketTableModel(stockMarket());
-        JTable table = new Forecast(model);
+        JTable table = new ForecastTable(model);
         return new JScrollPane(table);
     }
 
