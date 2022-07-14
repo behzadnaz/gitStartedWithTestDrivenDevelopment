@@ -18,7 +18,13 @@ public class ApplicationFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocation(INITIAL_POSITION);
         setSize(INITIAL_SIZE);
-        getContentPane().add(forecastTable());
+        addComponents();
+    }
+
+    private void addComponents() {
+        Container contentPane = getContentPane();
+        contentPane.add(BorderLayout.CENTER, forecastTable());
+        contentPane.add(BorderLayout.NORTH,  new JTextField());
     }
 
     private Component forecastTable() {

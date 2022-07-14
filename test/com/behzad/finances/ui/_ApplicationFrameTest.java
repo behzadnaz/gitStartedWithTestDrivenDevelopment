@@ -28,11 +28,13 @@ public class _ApplicationFrameTest {
         assertEquals("size", ApplicationFrame.INITIAL_SIZE,frame.getSize());
     }
     @Test
-    public void shouldContainAppropriateComponent() {
+    public void shouldLayoutProperly() {
         Component[] components = frame.getContentPane().getComponents();
-        assertEquals("# of components", 1, components.length);
+        assertEquals("layout",BorderLayout.class,frame.getContentPane().getLayout().getClass());
+        assertEquals("# of components", 2, components.length);
         assertEquals("component #0 ", JScrollPane.class, components[0].getClass());
         assertEquals("component #0 should contain table", ForecastTable.class, ((JScrollPane)components[0]).getViewport().getView().getClass());
+        assertEquals("component #1", JTextField.class, components[1].getClass());
     }
     @Test
     public void shouldExitApplicationWhenWindowsClose(){
