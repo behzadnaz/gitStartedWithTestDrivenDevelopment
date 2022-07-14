@@ -31,7 +31,6 @@ public class _StockMarketYearTest {
         year.sell(new Dollars(1350));
         assertEquals("multiple sales", new Dollars(5100), year.totalSellOrders());
     }
-
     @Test
     public void capitalGainsTax(){
         StockMarketYear year =  newYear();
