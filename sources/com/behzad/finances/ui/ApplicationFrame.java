@@ -29,6 +29,7 @@ public class ApplicationFrame extends JFrame {
     private void addComponents() {
         Container contentPane = getContentPane();
         Component forecastTable = forecastTable();
+        contentPane.setLayout(new BorderLayout());
         contentPane.add(BorderLayout.CENTER, forecastTable);
         contentPane.add(BorderLayout.NORTH, startingBalanceField());
     }
