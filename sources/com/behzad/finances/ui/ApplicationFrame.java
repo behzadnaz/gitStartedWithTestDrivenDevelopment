@@ -3,8 +3,12 @@ package com.behzad.finances.ui;
 import com.behzad.finances.domain.*;
 
 import javax.swing.*;
-import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableModel;
 import  java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class ApplicationFrame extends JFrame {
 
@@ -12,6 +16,7 @@ public class ApplicationFrame extends JFrame {
     public static final String TITLE = "Financial Projector";
     public static final Point INITIAL_POSITION = new Point(400, 300);
     public static final Dimension INITIAL_SIZE = new Dimension(900,400);
+    private JTable forecastTable;
 
     public ApplicationFrame(){
         super(TITLE);
@@ -23,21 +28,31 @@ public class ApplicationFrame extends JFrame {
 
     private void addComponents() {
         Container contentPane = getContentPane();
-        contentPane.add(BorderLayout.CENTER, forecastTable());
-        contentPane.add(BorderLayout.NORTH,  new JTextField());
+        Component forecastTable = forecastTable();
+        contentPane.add(BorderLayout.CENTER, forecastTable);
+        contentPane.add(BorderLayout.NORTH, startingBalanceField());
+    }
+
+    private JTextField startingBalanceField() {
+        JTextField field = new JTextField();
+        return field;
     }
 
     private Component forecastTable() {
-        return  new JScrollPane(new ForecastTable(new StockMarketTableModel(stockMarket())));
+        return  new JScrollPane(new ForecastTable(stockMarketTableModel()));
     }
 
-    private StockMarket stockMarket() {
+    private StockMarketTableModel stockMarketTableModel() {
+        return new StockMarketTableModel(stockMarket());
+    }
+
+    private StockMarketProjection stockMarket() {
         Year startingYear = new Year(2010);
         Year endingYear = new Year(2050);
         Dollars startingBalance = new Dollars(10000);
         Dollars startingPrincipal = new Dollars(7000);
         GrowthRate interestRate = new GrowthRate(10);
         TaxRate capitalGainsTaxRate = new TaxRate(25);
-        return new StockMarket(startingYear, endingYear, startingBalance, startingPrincipal, interestRate, capitalGainsTaxRate, new Dollars(695));
+        return new StockMarketProjection(startingYear, endingYear, startingBalance, startingPrincipal, interestRate, capitalGainsTaxRate, new Dollars(695));
     }
 }

@@ -1,6 +1,6 @@
 package com.behzad.finances.ui;
 
-import com.behzad.finances.domain.StockMarket;
+import com.behzad.finances.domain.StockMarketProjection;
 import com.behzad.finances.domain.StockMarketYear;
 import com.behzad.finances.util.UnreachableCodeException;
 
@@ -12,9 +12,9 @@ public class StockMarketTableModel extends AbstractTableModel {
     private static final String [] COLUMN_TITLES = {"Year", "Starting Balance", "Cost Basis", "Sales", "Growth", "Ending Balance"};
 
 
-    private StockMarket market;
+    private StockMarketProjection market;
 
-    public StockMarketTableModel(StockMarket market) {
+    public StockMarketTableModel(StockMarketProjection market) {
         this.market = market;
     }
 

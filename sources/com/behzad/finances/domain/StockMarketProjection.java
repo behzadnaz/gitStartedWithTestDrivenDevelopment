@@ -2,13 +2,13 @@ package com.behzad.finances.domain;
 
 import com.behzad.finances.util.Require;
 
-public class StockMarket {
+public class StockMarketProjection {
     private final Year startingYear;
     private final Year endingYear;
     private final Dollars sellEveryYear;
     private StockMarketYear[] years;
 
-    public StockMarket(Year startingYear, Year endingYear, Dollars startingBalance, Dollars startingPrincipal, GrowthRate interestRate, TaxRate capitalGainsTaxRate, Dollars sellEveryYear) {
+    public StockMarketProjection(Year startingYear, Year endingYear, Dollars startingBalance, Dollars startingPrincipal, GrowthRate interestRate, TaxRate capitalGainsTaxRate, Dollars sellEveryYear) {
         this.startingYear = startingYear;
         this.endingYear = endingYear;
         this.sellEveryYear = sellEveryYear;

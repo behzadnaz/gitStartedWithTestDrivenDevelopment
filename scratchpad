@@ -1,1 +1,12 @@
 Approval test have not worked
+
+/*field.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                forecastTable.setModel(new DefaultTableModel());
+            }
+        });
+        field.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e) {
+                forecastTable.setModel(new DefaultTableModel());
+            }
+        });*/

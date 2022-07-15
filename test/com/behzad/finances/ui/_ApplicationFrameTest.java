@@ -29,8 +29,8 @@ public class _ApplicationFrameTest {
     }
     @Test
     public void shouldLayoutProperly() {
+       // assertEquals("layout",BorderLayout.class,frame.getContentPane().getLayout().getClass());
         Component[] components = frame.getContentPane().getComponents();
-        assertEquals("layout",BorderLayout.class,frame.getContentPane().getLayout().getClass());
         assertEquals("# of components", 2, components.length);
         assertEquals("component #0 ", JScrollPane.class, components[0].getClass());
         assertEquals("component #0 should contain table", ForecastTable.class, ((JScrollPane)components[0]).getViewport().getView().getClass());
