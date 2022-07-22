@@ -2,6 +2,10 @@ package com.behzad.finances.ui;
 
 import com.behzad.finances.domain.*;
 import org.junit.*;
+
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+
 import static org.junit.Assert.*;
 
 public class _StockMarketTableModelTest {
@@ -10,12 +14,15 @@ public class _StockMarketTableModelTest {
     private static final Year ENDING_YEAR = new Year(2050);
     public static final Dollars STARTING_BALANCE = new Dollars(10000);
     public static final Dollars STARTING_PRINCIPAL = new Dollars(7000);
+    private StockMarketYear startingYear;
     private StockMarketTableModel model;
+
 
     @Before
     public void setup(){
-        StockMarketProjection market = new StockMarketProjection(STARTING_YEAR, ENDING_YEAR, STARTING_BALANCE, STARTING_PRINCIPAL, new GrowthRate(10), new TaxRate(25), new Dollars(0));
-        model =new StockMarketTableModel(market);
+        startingYear = new StockMarketYear(STARTING_YEAR, STARTING_BALANCE, STARTING_PRINCIPAL,new GrowthRate(10), new TaxRate(25));
+        StockMarketProjection projection = new StockMarketProjection(startingYear, ENDING_YEAR, new Dollars(0));
+        model =new StockMarketTableModel(projection);
     }
     @Test
     public void columns(){
@@ -42,6 +49,38 @@ public class _StockMarketTableModelTest {
         assertEquals(STARTING_BALANCE , model.getValueAt(0,1));
         assertEquals(new Dollars(11000) , model.getValueAt(1,1));
         assertEquals(ENDING_YEAR , model.getValueAt(40,0));
+    }
+    @Test
+    public void setProjection_ShouldChangeTableModel(){
+        StockMarketProjection projection = new StockMarketProjection(startingYear, startingYear.year(), new Dollars(0));
+        model.setProjection(projection);
+        assertEquals("projection should have changed",projection, model.stockMarketProjection());
+        assertEquals("change to projection should reflect in method", 1 ,model.getRowCount());
+    }
+    @Test
+    public void startingBalance(){
+        assertEquals(STARTING_BALANCE, model.startingBalance());
+    }
+    @Test
+    public void setProjection_ShouldFireUpdateEvent() {
+        StockMarketProjection projection = new StockMarketProjection(startingYear, ENDING_YEAR, new Dollars(0));
+        class TestListener  implements TableModelListener{
+            public boolean eventField = false;
+            public Integer firstRowChanged = null;
+            public Integer lastRowChanged = null;
+
+            public void tableChanged(TableModelEvent e) {
+                eventField = true;
+                firstRowChanged = e.getFirstRow();
+                lastRowChanged = e.getLastRow();
+            }
+        }
+        TestListener listener = new TestListener();
+        model.addTableModelListener(listener);
+        model.setProjection(projection);
+        assertTrue("event should have been fired", listener.eventField);
+        assertEquals("the whole table should have changed (first row)",0, listener.firstRowChanged.intValue());
+        assertEquals("the whole table should have changed (last row)",Integer.MAX_VALUE, listener.lastRowChanged.intValue());
 
 
     }

@@ -1,11 +1,13 @@
 package com.behzad.finances.ui;
 
-import com.behzad.finances.Application;
+import com.behzad.finances.domain.Dollars;
 import org.junit.*;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static org.junit.Assert.*;
 
@@ -15,7 +17,7 @@ public class _ApplicationFrameTest {
 
     @Before
     public void setup(){
-        frame = new ApplicationFrame();
+        frame = new ApplicationFrame(new ApplicationModel());
     }
 
     @Test
@@ -46,5 +48,26 @@ public class _ApplicationFrameTest {
         TableModel model = ((ForecastTable) scrollPane.getViewport().getView()).getModel();
         assertEquals("forecast table model class",StockMarketTableModel.class, model.getClass());
         assertEquals("# of rows in model",41, model.getRowCount());
+    }
+    @Test
+    public void startingBalanceFieldShouldUpdateApplicationModel(){
+        class MockApplicationModel extends ApplicationModel{
+           public Dollars setStartingBalanceCalledWith;
+
+           @Override
+           public void setStartingBalance(Dollars startingBalance) {
+               setStartingBalanceCalledWith = startingBalance;
+           }
+       }
+        MockApplicationModel mockModel = new MockApplicationModel();
+        frame = new ApplicationFrame(mockModel);
+
+        JTextField field = frame.startingBalanceField();
+        field.setText("668");
+        ActionListener[] listeners = field.getActionListeners();
+        listeners[0].actionPerformed(new ActionEvent(field,0,""));
+        assertEquals("text field should have action listener", 1, listeners.length);
+
+        assertEquals("application model should update",new Dollars(668), mockModel.setStartingBalanceCalledWith);
     }
 }
