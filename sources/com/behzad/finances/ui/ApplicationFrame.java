@@ -3,9 +3,13 @@ package com.behzad.finances.ui;
 import com.behzad.finances.domain.Dollars;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import  java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class ApplicationFrame extends JFrame {
 
@@ -33,12 +37,18 @@ public class ApplicationFrame extends JFrame {
     }
 
     public JTextField startingBalanceField() {
-        JTextField field = new JTextField();
-        field.addActionListener(new ActionListener() {
+        final JTextField field = new JTextField();
+        field.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                applicationModel.setStartingBalance(new Dollars(Integer.parseInt(field.getText())));
-            }
+            public void insertUpdate(DocumentEvent e) {updateApplicationModel();}
+            @Override
+            public void removeUpdate(DocumentEvent e) {updateApplicationModel();}
+            @Override
+            public void changedUpdate(DocumentEvent e) {updateApplicationModel();}
+            private void updateApplicationModel(){
+                int value = Integer.parseInt(field.getText());
+                Dollars startingBalance = new Dollars(value);
+                applicationModel.setStartingBalance(startingBalance);}
         });
         return field;
     }

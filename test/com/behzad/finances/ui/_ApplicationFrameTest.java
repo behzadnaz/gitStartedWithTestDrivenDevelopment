@@ -8,6 +8,8 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import static org.junit.Assert.*;
 
@@ -64,10 +66,6 @@ public class _ApplicationFrameTest {
 
         JTextField field = frame.startingBalanceField();
         field.setText("668");
-        ActionListener[] listeners = field.getActionListeners();
-        listeners[0].actionPerformed(new ActionEvent(field,0,""));
-        assertEquals("text field should have action listener", 1, listeners.length);
-
-        assertEquals("application model should update",new Dollars(668), mockModel.setStartingBalanceCalledWith);
+        assertEquals("application model should be updated",new Dollars(668), mockModel.setStartingBalanceCalledWith);
     }
 }
