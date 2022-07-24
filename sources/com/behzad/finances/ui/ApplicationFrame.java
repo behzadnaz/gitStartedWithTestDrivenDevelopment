@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.text.ParseException;
 
 public class ApplicationFrame extends JFrame {
 
@@ -36,8 +37,8 @@ public class ApplicationFrame extends JFrame {
         contentPane.add(BorderLayout.NORTH, startingBalanceField());
     }
 
-    public JTextField startingBalanceField() {
-        final JTextField field = new JTextField();
+    public DollarsTextField startingBalanceField() {
+        final DollarsTextField field = new DollarsTextField( new Dollars(666));
         field.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {updateApplicationModel();}
@@ -46,9 +47,16 @@ public class ApplicationFrame extends JFrame {
             @Override
             public void changedUpdate(DocumentEvent e) {updateApplicationModel();}
             private void updateApplicationModel(){
-                int value = Integer.parseInt(field.getText());
-                Dollars startingBalance = new Dollars(value);
-                applicationModel.setStartingBalance(startingBalance);}
+                try{
+                    int value = Integer.parseInt(field.getText());
+                    Dollars startingBalance = new Dollars(value);
+                    applicationModel.setStartingBalance(startingBalance);
+                }
+                catch (NumberFormatException e){
+                    System.out.println("*");
+                }
+            }
+
         });
         return field;
     }
