@@ -1,6 +1,7 @@
 package com.behzad.finances.ui;
 
 import com.behzad.finances.domain.Dollars;
+import com.behzad.finances.domain.ValidDollars;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -38,7 +39,7 @@ public class ApplicationFrame extends JFrame {
     }
 
     public DollarsTextField startingBalanceField() {
-        final DollarsTextField field = new DollarsTextField( new Dollars(666));
+        final DollarsTextField field = new DollarsTextField(new ValidDollars(666));
         field.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {updateApplicationModel();}
@@ -48,12 +49,10 @@ public class ApplicationFrame extends JFrame {
             public void changedUpdate(DocumentEvent e) {updateApplicationModel();}
             private void updateApplicationModel(){
                 try{
-                    int value = Integer.parseInt(field.getText());
-                    Dollars startingBalance = new Dollars(value);
-                    applicationModel.setStartingBalance(startingBalance);
+                    applicationModel.setStartingBalance(field.getDollars());
                 }
                 catch (NumberFormatException e){
-                    System.out.println("*");
+                    System.out.println("ERROR!" + field.getText());
                 }
             }
 

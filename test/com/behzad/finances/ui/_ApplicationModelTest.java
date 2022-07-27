@@ -3,6 +3,7 @@ package com.behzad.finances.ui;
 import com.behzad.finances.domain.Dollars;
 import com.behzad.finances.domain.StockMarketProjection;
 import com.behzad.finances.domain.StockMarketYear;
+import com.behzad.finances.domain.ValidDollars;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -31,8 +32,8 @@ public class _ApplicationModelTest {
     }
     @Test
     public void changingStartingBalanceShouldChangeStockMarketModel(){
-        model.setStartingBalance(new Dollars(123));
-        assertEquals(new Dollars(123),model.stockMarketTableModel().startingBalance());
+        model.setStartingBalance(new ValidDollars(123));
+        assertEquals(new ValidDollars(123),model.stockMarketTableModel().startingBalance());
         //assertEquals(model.stockMarketProjection(), model.stockMarketTableModel().stockMarketProjection());
     }
 

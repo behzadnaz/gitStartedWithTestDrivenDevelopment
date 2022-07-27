@@ -1,16 +1,12 @@
 package com.behzad.finances.ui;
 
 import com.behzad.finances.domain.Dollars;
+import com.behzad.finances.domain.ValidDollars;
 import org.junit.*;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-
 import static org.junit.Assert.*;
 
 public class _ApplicationFrameTest {
@@ -66,6 +62,6 @@ public class _ApplicationFrameTest {
 
         DollarsTextField field = frame.startingBalanceField();
         field.setText("668");
-        assertEquals("application model should be updated",new Dollars(668), mockModel.setStartingBalanceCalledWith);
+        assertEquals("application model should be updated",new ValidDollars(668), mockModel.setStartingBalanceCalledWith);
     }
 }
