@@ -1,5 +1,7 @@
 package com.behzad.finances.domain;
 
+import javax.swing.*;
+import java.awt.*;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -50,6 +52,14 @@ public class ValidDollars extends Dollars{
         return Math.round(this.amount);
     }
 
+    public void render(JLabel label) {
+        label.setToolTipText(null);
+        label.setIcon(null);
+        label.setText(this.toString());
+        label.setForeground(Color.BLACK);
+        if(amount < 0) label.setForeground(Color.red);
+    }
+
     @Override
     public String toString() {
         if(isNegative()){
@@ -66,6 +76,7 @@ public class ValidDollars extends Dollars{
 
     @Override
     public boolean equals(Object o) {
+        if(o == null || o instanceof InvalidDollars)  return false;
         ValidDollars that = (ValidDollars) o;
         return this.roundOffPennies() == that.roundOffPennies();
     }
@@ -74,4 +85,5 @@ public class ValidDollars extends Dollars{
     public int hashCode() {
         return (int)roundOffPennies();
     }
+
 }

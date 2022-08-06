@@ -26,11 +26,26 @@ public class _DollarsTest {
     @Test
     public void parseParentheses(){
         assertEquals("open parenthesis only", new ValidDollars(0), Dollars.parse("("));
-        assertEquals("close parenthesis only", new ValidDollars(0), Dollars.parse(")"));
+        assertEquals("close parenthesis only", new InvalidDollars(), Dollars.parse(")"));
         assertEquals("both parenthesis only", new ValidDollars(0), Dollars.parse("()"));
         assertEquals("number in parenthesis", new ValidDollars(-42), Dollars.parse("(42)"));
         assertEquals("open parenthesis and number", new ValidDollars(-42), Dollars.parse("(42"));
         assertEquals("close parenthesis and number", new ValidDollars(-42), Dollars.parse("42)"));
+    }
+    @Test
+    public void parseIllegals(){
+        InvalidDollars invalid =  new InvalidDollars();
+        assertEquals(invalid, Dollars.parse("x"));
+        assertEquals(invalid, Dollars.parse("40d"));
+        assertEquals(invalid,Dollars.parse("40f"));
+    }
+    @Test
+    // this test handle special case where the core Java library hangs when
+    //parsing a magic number
+    public void parsingTheDoubleOfDeathDoesntHangMachine(){
+        Dollars.parse("2.2250738585072012e-308");
+       // assertEquals(new ValidDollars("2.2250738585072012e-308"), );
+
     }
 
 }

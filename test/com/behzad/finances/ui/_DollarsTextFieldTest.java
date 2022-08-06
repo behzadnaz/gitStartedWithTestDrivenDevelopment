@@ -39,9 +39,9 @@ public class _DollarsTextFieldTest {
     }
 
     @Test
-    public void fieldIsReformattedWhenItLosesFocus() throws Exception {
+    public void fieldIsNotReformattedWhenTheValidIsInvalid() throws Exception {
         field.dispatchEvent(new FocusEvent(field, FocusEvent.FOCUS_GAINED));
-        field.setText("10");
+        field.setText("xxx");
         field.dispatchEvent(new FocusEvent(field, FocusEvent.FOCUS_LOST));
 
         final String[] testResult = {null};
@@ -50,6 +50,6 @@ public class _DollarsTextFieldTest {
                 testResult[0] = (field.getText());
             }
         });
-        assertEquals("$10", testResult[0]);
+        assertEquals("xxx", testResult[0]);
     }
 }

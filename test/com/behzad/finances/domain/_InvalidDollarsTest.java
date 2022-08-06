@@ -1,7 +1,12 @@
 package com.behzad.finances.domain;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 
 import static org.junit.Assert.*;
 
@@ -52,13 +57,38 @@ public class _InvalidDollarsTest {
         assertEquals(new InvalidDollars(),valid.min(invalidB));
     }
 
+    @Test
+    public void renderToSwingLabel(){
+        JLabel label = new JLabel();
+        invalidA.render(label);
+
+        URL iconUrl = getClass().getResource("invalid_dollars.png");
+        ImageIcon expectedIcon = new ImageIcon(iconUrl);
+
+        ImageIcon actualIcon = (ImageIcon) label.getIcon();
+        assertEquals("render appropriate", expectedIcon.getImage(), actualIcon.getImage());
+        assertEquals("icon description", "Invalid dollar amount", actualIcon.getDescription());
+    }
+
+    @Test
+    public void renderingShouldResetLabelToDefaultState(){
+        JLabel label = new JLabel();
+        label.setText("foodle");
+        label.setToolTipText("bogus tooltip");
+        invalidA.render(label);
+        assertNull("should have no text", label.getText());
+        assertNull("should have no tooltip", label.getToolTipText());
+    }
 
     @Test
     public void valueObject(){
         assertEquals("$???", invalidA.toString());
         assertTrue("invalid dollars always equal", invalidA.equals(invalidB));
         assertFalse("invalid dollar don't equal anything else", invalidA.equals(valid));
+        assertFalse("shouldn't below up when comparing to null", invalidA.equals(null));
         assertTrue("equal dollars should have same hash code", invalidA.hashCode() == invalidB.hashCode());
+
+
     }
 
 }

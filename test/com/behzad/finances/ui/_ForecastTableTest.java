@@ -56,7 +56,32 @@ public class _ForecastTableTest {
         table.setRowSelectionInterval(0,0);
         assertEquals("row 0 should have selection background", ForecastTable.SELECTION_BACKGROUND_COLOR, getCellBackground(table, 0, 0));
     }
-    //ToDo: tableRowsShouldAlternate_WhenThereAreColumnHeaders
+    @Test
+    @SuppressWarnings("serial")
+    public void tableShouldHaveSelfRenderableObjectsRenderThemselves(){
+        SelfRenderable renderable = new SelfRenderable() {
+            @Override
+            public void render(JLabel label) {
+                label.setText("I render myself");
+            }
+        };
+        DefaultTableModel tableModel = new DefaultTableModel(0,1){
+          @Override
+            public  Class<?> getColumnClass(int column){
+                return SelfRenderable.class;
+            }
+        };
+        tableModel.addRow(new SelfRenderable[] {renderable});
+        JTable table = new ForecastTable(tableModel);
+        String cellText = getCellText(table, 0, 0);
+        assertEquals("I render myself", cellText);
+    }
+
+    private String getCellText(JTable table,int row, int column) {
+        TableCellRenderer renderer = table.getCellRenderer(row,column);
+        JLabel label = (JLabel) table.prepareRenderer(renderer,row,column);
+        return label.getText();
+    }
 
     private Color getCellBackground(JTable table, int row, int column) {
         TableCellRenderer renderer = table.getCellRenderer(row, column);

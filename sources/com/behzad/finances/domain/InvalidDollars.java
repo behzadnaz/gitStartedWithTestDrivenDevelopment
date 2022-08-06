@@ -1,5 +1,8 @@
 package com.behzad.finances.domain;
 
+import javax.swing.*;
+import java.net.URL;
+
 public class InvalidDollars extends Dollars{
 
     @Override
@@ -32,6 +35,13 @@ public class InvalidDollars extends Dollars{
         return new InvalidDollars();
     }
 
+    public void render(JLabel label) {
+        URL iconUrl = getClass().getResource("invalid_dollars.png");
+        label.setIcon(new ImageIcon(iconUrl,"Invalid dollar amount"));
+        label.setText(null);
+        label.setToolTipText(null);
+    }
+
     @Override
     public String toString(){
         return "$???";
@@ -46,4 +56,6 @@ public class InvalidDollars extends Dollars{
     public int hashCode() {
         return 13;
     }
+
+
 }

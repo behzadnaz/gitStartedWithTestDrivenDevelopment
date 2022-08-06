@@ -3,6 +3,7 @@ package com.behzad.finances.ui;
 import com.behzad.finances.domain.Dollars;
 import com.behzad.finances.domain.StockMarketProjection;
 import com.behzad.finances.domain.StockMarketYear;
+import com.behzad.finances.domain.Year;
 import com.behzad.finances.util.UnreachableCodeException;
 
 import javax.swing.table.*;
@@ -11,6 +12,7 @@ public class StockMarketTableModel extends AbstractTableModel {
 
     private static final long serialVersionUID= 1l;
     private static final String [] COLUMN_TITLES = {"Year", "Starting Balance", "Cost Basis", "Sales", "Growth", "Ending Balance"};
+   private static final Class<?> [] COLUMN_CLASSES = {Year.class, Dollars.class, SelfRenderable.class,SelfRenderable.class,SelfRenderable.class,SelfRenderable.class   };
     private StockMarketProjection projection;
 
     public StockMarketTableModel(StockMarketProjection projection) {
@@ -37,6 +39,10 @@ public class StockMarketTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int column){
         return COLUMN_TITLES[column];
+    }
+    @Override
+    public Class<?> getColumnClass(int column){
+        return COLUMN_CLASSES[column];
     }
 
     @Override

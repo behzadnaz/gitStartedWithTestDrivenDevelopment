@@ -1,8 +1,11 @@
 package com.behzad.finances.ui;
 
+import com.behzad.finances.domain.Dollars;
+
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
+import java.net.URL;
 
 public class ForecastTable extends JTable {
 
@@ -12,7 +15,21 @@ public class ForecastTable extends JTable {
     public static final Color ALTERNATE_BACKGROUND_COLOR = new Color(223, 230, 236);
 
     public ForecastTable(TableModel model) {
+
         super(model);
+        setDefaultRenderer(SelfRenderable.class, selfRenderer());
+    }
+
+    private TableCellRenderer selfRenderer(){
+        return new DefaultTableCellRenderer(){
+            private static final long serialVersionID = 1L;
+
+            public void setValue(Object value){
+                SelfRenderable renderable = (SelfRenderable) value;
+                renderable.render(this);
+
+            }
+        };
     }
     public Component prepareRenderer(TableCellRenderer renderer , int row, int column){
         Component cell = super.prepareRenderer(renderer,row,column);

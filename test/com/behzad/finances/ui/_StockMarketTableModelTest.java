@@ -31,6 +31,17 @@ public class _StockMarketTableModelTest {
         assertEquals("Starting Balance", model.getColumnName(1));
         assertEquals("Cost Basis", model.getColumnName(2));
     }
+    @Test
+    public void columnClasses(){
+        for(int i = 0; i< model.getColumnCount(); i++){
+            Class<?> actual = model.getValueAt(0,i).getClass();
+            Class<?> declared = model.getColumnClass(i);
+            String message = String.format("declared class for column %d (%s) is not compatible actual class (%s)",i,declared,actual);
+            assertTrue(message, declared.isAssignableFrom(actual));
+            assertFalse("declared class for column" + i +" cannot be object", declared.equals(Object.class));
+
+        }
+    }
 
     @Test
     public void oneRow(){

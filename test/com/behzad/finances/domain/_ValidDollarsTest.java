@@ -2,11 +2,19 @@ package com.behzad.finances.domain;
 
 import org.junit.*;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.Locale;
 
 import static org.junit.Assert.*;
 
 public class _ValidDollarsTest {
+    private ValidDollars twentyDollars;
+
+    @Before
+    public void setup(){
+        twentyDollars = new ValidDollars(20);
+    }
 
     @Test
     public void  isInvalid(){
@@ -37,6 +45,42 @@ public class _ValidDollarsTest {
         Dollars value2 = new ValidDollars(30);
         assertEquals("Value 1",new ValidDollars(20), Dollars.min(value1, value2));
         assertEquals("Value 2",new ValidDollars(20), Dollars.min(value2, value1));
+    }
+
+    @Test
+    public void renderToSwingLabel(){
+        JLabel label = new JLabel();
+        twentyDollars.render(label);
+        assertEquals("label text should be toString() value",twentyDollars.toString(),label.getText());
+    }
+    @Test
+    public void renderNegativeValueInRed(){
+        JLabel label = new JLabel();
+        ValidDollars minusTwenty  =new ValidDollars(-20);
+        minusTwenty.render(label);
+        assertEquals("red when negative", Color.RED, label.getForeground());
+    }
+    @Test
+    public void renderZeroAndPositiveInBlack(){
+        JLabel label = new JLabel();
+        ValidDollars zero  =new ValidDollars(0);
+        zero.render(label);
+        assertEquals("black when 0",Color.BLACK,label.getForeground());
+
+        label = new JLabel();
+        twentyDollars.render(label);
+        assertEquals("black when 0",Color.BLACK,label.getForeground());
+    }
+    @Test
+    public void renderingShouldResetLabelToDefaultState(){
+        JLabel label= new JLabel();
+        label.setIcon(new ImageIcon());
+        label.setToolTipText("bogus tooltip");
+        label.setForeground(Color.CYAN);
+        twentyDollars.render(label);
+        assertNull("should not have icon",label.getIcon());
+        assertNull("should not have tooltip", label.getToolTipText());
+        assertEquals("foreground color",Color.BLACK,label.getForeground());
     }
 
     @Test
@@ -87,6 +131,8 @@ public class _ValidDollarsTest {
         assertEquals("$10", dollars1a.toString());
         assertTrue("dollars with same amount should be equal", dollars1a.equals(dollars1b));
         assertFalse("dollars with different amount should not be equal", dollars1a.equals(dollars2));
+        assertFalse("valid dollar aren't equal to invalid dollar",  dollars1a.equals(new InvalidDollars()));
         assertTrue("equal dollars should have same hash code", dollars1a.hashCode() == dollars1b.hashCode());
+        assertFalse("shouldn't blow up when compare to null", dollars1a.equals(null));
     }
 }

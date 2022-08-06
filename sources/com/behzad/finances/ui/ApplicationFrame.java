@@ -1,17 +1,10 @@
 package com.behzad.finances.ui;
 
-import com.behzad.finances.domain.Dollars;
 import com.behzad.finances.domain.ValidDollars;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import  java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.text.ParseException;
 
 public class ApplicationFrame extends JFrame {
 
@@ -48,14 +41,8 @@ public class ApplicationFrame extends JFrame {
             @Override
             public void changedUpdate(DocumentEvent e) {updateApplicationModel();}
             private void updateApplicationModel(){
-                try{
                     applicationModel.setStartingBalance(field.getDollars());
-                }
-                catch (NumberFormatException e){
-                    System.out.println("ERROR!" + field.getText());
-                }
             }
-
         });
         return field;
     }
