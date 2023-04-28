@@ -54,7 +54,10 @@ public class _InvalidDollarsTest {
         assertEquals(new InvalidDollars(), invalidA.min(valid));
         assertEquals(new InvalidDollars(),valid.min(invalidB));
     }
-
+    @Test
+    public void flipSign(){
+        assertEquals(new InvalidDollars(), invalidA.flipSign());
+    }
     @Test
     public void rendersItSelf(){
         __RenderTargetStub target = new __RenderTargetStub();

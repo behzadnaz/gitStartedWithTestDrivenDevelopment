@@ -10,14 +10,12 @@ import java.util.Locale;
 import static org.junit.Assert.*;
 
 public class _ValidDollarsTest {
-    private Dollars twentyDollars;
+    private Dollars twentyDollars = ValidDollars.create(20);
+    private Dollars minusTwentyDollars  = ValidDollars.create(-20);
+    private Dollars zeroDollars  = ValidDollars.create(0);
     private Dollars MAX_VALID =  ValidDollars.create(ValidDollars.MAX_VALUE);
     private Dollars MIN_VALID =  ValidDollars.create(ValidDollars.MIN_VALUE);
 
-    @Before
-    public void setup(){
-        twentyDollars = ValidDollars.create(20);
-    }
     @Test
     public void cannotConstructDollarsOutsideValidRange(){
        assertEquals("overflow", new InvalidDollars(), ValidDollars.create(ValidDollars.MAX_VALUE + 1));
@@ -36,14 +34,14 @@ public class _ValidDollarsTest {
     }
     @Test
     public void subtraction(){
-        assertEquals("positive results", ValidDollars.create(20), ValidDollars.create(50).minus(ValidDollars.create(30)));
+        assertEquals("positive results", twentyDollars, ValidDollars.create(50).minus(ValidDollars.create(30)));
         assertEquals("negative result", ValidDollars.create(-60), ValidDollars.create(40).minus(ValidDollars.create(100)));
         assertEquals("overflow", new InvalidDollars(), MAX_VALID.minus(ValidDollars.create(-1)));
         assertEquals("underflow", new InvalidDollars(), MIN_VALID.minus(ValidDollars.create(1)));
     }
     @Test
     public  void minusToZero(){
-        assertEquals("positive result",ValidDollars.create(20), ValidDollars.create(50).subtractToZero(ValidDollars.create(30)));
+        assertEquals("positive result", twentyDollars, ValidDollars.create(50).subtractToZero(ValidDollars.create(30)));
         assertEquals("no negative result-- return zero instead", ValidDollars.create(0), ValidDollars.create(40).subtractToZero(ValidDollars.create(100)));
         assertEquals("overflow", new InvalidDollars(), MAX_VALID.subtractToZero(ValidDollars.create(-1)));
     }
@@ -53,11 +51,18 @@ public class _ValidDollarsTest {
         assertEquals("overflow", new InvalidDollars(), MAX_VALID.percentage(200));
     }
     @Test
+    public void flipSign(){
+       assertEquals("zero to zero", zeroDollars, zeroDollars.flipSign());
+       assertEquals("positive to negative", minusTwentyDollars, twentyDollars.flipSign());
+       assertEquals("negative to positive",twentyDollars,  minusTwentyDollars.flipSign());
+    }
+
+    @Test
     public void min(){
-        Dollars value1 = ValidDollars.create(20);
+        Dollars value1 = twentyDollars;
         Dollars value2 = ValidDollars.create(30);
-        assertEquals("Value 1",ValidDollars.create(20), Dollars.min(value1, value2));
-        assertEquals("Value 2",ValidDollars.create(20), Dollars.min(value2, value1));
+        assertEquals("Value 1",twentyDollars, Dollars.min(value1, value2));
+        assertEquals("Value 2",twentyDollars, Dollars.min(value2, value1));
     }
 
     @Test
@@ -69,15 +74,13 @@ public class _ValidDollarsTest {
     @Test
     public void rendersNegativeValueInRed(){
         __RenderTargetStub target = new __RenderTargetStub();
-        Dollars minusTwenty  = ValidDollars.create(-20);
-        minusTwenty.render(new Resources(), target);
+        minusTwentyDollars.render(new Resources(), target);
         assertEquals("red when negative", Color.RED, target.foregroundColor);
     }
     @Test
     public void rendersZeroAndPositiveInBlack(){
         __RenderTargetStub target = new __RenderTargetStub();
-        Dollars zero  = ValidDollars.create(0);
-        zero.render(new Resources(), target);
+        zeroDollars.render(new Resources(), target);
         assertEquals("black when 0",Color.BLACK,target.foregroundColor);
 
         target = new __RenderTargetStub();

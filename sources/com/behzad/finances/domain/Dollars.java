@@ -2,6 +2,8 @@ package com.behzad.finances.domain;
 
 import com.behzad.finances.ui.Resources;
 import com.behzad.finances.ui.SelfRenderable;
+import com.behzad.finances.util.NotImplementedException;
+
 import javax.swing.*;
 
 
@@ -39,13 +41,12 @@ public abstract class Dollars implements SelfRenderable {
     public static Dollars min(Dollars value1, Dollars value2){
         return value1.min(value2);
     }
+    public  Dollars flipSign(){return ValidDollars.create(0).minus(this);}
+
     public abstract boolean isValid();
     public abstract Dollars plus(Dollars dollars);
     public abstract Dollars minus(Dollars dollars);
     public abstract Dollars subtractToZero(Dollars dollars);
     public abstract Dollars percentage(double dollars);
     public abstract Dollars min(Dollars value2);
-    //public abstract void render(Resources resources, JLabel label );
-
-
 }

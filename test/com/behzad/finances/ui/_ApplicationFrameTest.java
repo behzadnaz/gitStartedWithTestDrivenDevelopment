@@ -7,6 +7,9 @@ import org.junit.*;
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+
 import static org.junit.Assert.*;
 
 public class _ApplicationFrameTest {
@@ -28,6 +31,21 @@ public class _ApplicationFrameTest {
     public void shouldHaveHardCodedPositionAndSize(){
         assertEquals("position",ApplicationFrame.INITIAL_POSITION,frame.getLocation());
         assertEquals("size", ApplicationFrame.INITIAL_SIZE,frame.getSize());
+    }
+    @Test
+    public void shouldHaveMenu(){
+        JMenuBar menuBar = frame.getJMenuBar();
+        assertNotNull("should have menu bar", menuBar);
+        assertEquals("# of menus", 1, menuBar.getMenuCount());
+        JMenu fileMenu = menuBar.getMenu(0);
+        assertEquals("file menu title", "File", fileMenu.getText());
+        assertEquals("# menu items", 1, fileMenu.getItemCount());
+        JMenuItem newMenuItem = fileMenu.getItem(0);
+        assertEquals("'new' menu item", "New", newMenuItem.getText());
+
+        KeyStroke newMenuItemAccelerator = newMenuItem.getAccelerator();
+        assertNotNull("'new' menu item should have accelerator", newMenuItemAccelerator);
+        assertEquals("'new' accelerator key", KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.META_MASK), newMenuItemAccelerator);
     }
     @Test
     public void shouldLayoutProperly() {

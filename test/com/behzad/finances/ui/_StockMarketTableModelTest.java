@@ -34,7 +34,7 @@ public class _StockMarketTableModelTest {
     
     @Test
     public void columns(){
-
+        assertEquals(7, model.getColumnCount());
         assertEquals("Year", model.getColumnName(0));
         assertEquals("Starting Balance", model.getColumnName(1));
         assertEquals("Cost Basis", model.getColumnName(2));
@@ -56,9 +56,10 @@ public class _StockMarketTableModelTest {
         assertEquals("year", STARTING_YEAR, model.getValueAt(0,0));
         assertEquals("staring balance", STARTING_BALANCE, model.getValueAt(0,1));
         assertEquals("starting principal", STARTING_COST_BASIS, model.getValueAt(0,2));
-        assertEquals("withdrawals", ValidDollars.create(48), model.getValueAt(0,3));
-        assertEquals("appreciation", ValidDollars.create(995), model.getValueAt(0,4));
-        assertEquals("ending balance", ValidDollars.create(10947), model.getValueAt(0,5));
+        assertEquals("sell orders", ValidDollars.create(0).minus(YEARLY_SPENDING), model.getValueAt(0,3));
+        assertEquals("taxes", ValidDollars.create(-12), model.getValueAt(0,4));
+        assertEquals("appreciation", ValidDollars.create(995), model.getValueAt(0,5));
+        assertEquals("ending balance", ValidDollars.create(10947), model.getValueAt(0,6));
     }
 
     @Test
