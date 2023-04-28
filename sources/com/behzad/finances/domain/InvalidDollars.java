@@ -1,7 +1,8 @@
 package com.behzad.finances.domain;
 
-import javax.swing.*;
-import java.net.URL;
+import com.behzad.finances.ui.RenderTarget;
+import com.behzad.finances.ui.Resources;
+
 
 public class InvalidDollars extends Dollars{
 
@@ -35,13 +36,10 @@ public class InvalidDollars extends Dollars{
         return new InvalidDollars();
     }
 
-    public void render(JLabel label) {
-        URL iconUrl = getClass().getResource("invalid_dollars.png");
-        label.setIcon(new ImageIcon(iconUrl,"Invalid dollar amount"));
-        label.setText(null);
-        label.setToolTipText(null);
+    public void render(Resources resources, RenderTarget target) {
+        target.setIcon(resources.invalidDollarIcon(), "invalid dollar amount");
+        target.setText(null);
     }
-
     @Override
     public String toString(){
         return "$???";

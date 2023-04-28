@@ -1,12 +1,10 @@
 package com.behzad.finances.domain;
 
+import com.behzad.finances.ui.Resources;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.swing.*;
-import java.awt.*;
-import java.net.URL;
 
 import static org.junit.Assert.*;
 
@@ -20,7 +18,7 @@ public class _InvalidDollarsTest {
     public void setup(){
         invalidA = new InvalidDollars();
         invalidB = new InvalidDollars();
-        valid = new ValidDollars(13);
+        valid = (ValidDollars) ValidDollars.create(13);
     }
 
     @Test
@@ -58,26 +56,25 @@ public class _InvalidDollarsTest {
     }
 
     @Test
-    public void renderToSwingLabel(){
-        JLabel label = new JLabel();
-        invalidA.render(label);
+    public void rendersItSelf(){
+        __RenderTargetStub target = new __RenderTargetStub();
+        invalidA.render(new Resources(),target);
 
-        URL iconUrl = getClass().getResource("invalid_dollars.png");
-        ImageIcon expectedIcon = new ImageIcon(iconUrl);
+        ImageIcon expectedIcon = new Resources().invalidDollarIcon();
+        ImageIcon actualIcon = (ImageIcon) target.icon;
 
-        ImageIcon actualIcon = (ImageIcon) label.getIcon();
-        assertEquals("render appropriate", expectedIcon.getImage(), actualIcon.getImage());
+        assertEquals("icon image", expectedIcon.getImage(), actualIcon.getImage());
         assertEquals("icon description", "Invalid dollar amount", actualIcon.getDescription());
+        assertEquals("tooltip message","invalid dollar amount", target.toolTipText );
     }
 
     @Test
     public void renderingShouldResetLabelToDefaultState(){
-        JLabel label = new JLabel();
-        label.setText("foodle");
-        label.setToolTipText("bogus tooltip");
-        invalidA.render(label);
-        assertNull("should have no text", label.getText());
-        assertNull("should have no tooltip", label.getToolTipText());
+        __RenderTargetStub target = new __RenderTargetStub();
+        target.text = "foodle";
+
+        invalidA.render(new Resources(),target);
+        assertNull("should have no text", target.text);
     }
 
     @Test

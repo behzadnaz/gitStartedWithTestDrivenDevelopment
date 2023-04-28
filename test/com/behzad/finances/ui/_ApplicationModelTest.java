@@ -24,6 +24,7 @@ public class _ApplicationModelTest {
         assertEquals(ApplicationModel.DEFAULT_STARTING_COST_BASIS,startingYear.startingCostBasis());
         assertEquals(ApplicationModel.DEFAULT_GROWTH_RATE,startingYear.growthRate());
         assertEquals(ApplicationModel.DEFAULT_CAPITAL_GAINS_TAX_RATE,startingYear.capitalGainsTaxRate());
+        assertEquals(ApplicationModel.DEFAULT_YEARLY_SPENDING, startingYear.totalSellOrders());
         assertEquals(41,projection.numberOfYears());
     }
     @Test
@@ -32,9 +33,18 @@ public class _ApplicationModelTest {
     }
     @Test
     public void changingStartingBalanceShouldChangeStockMarketModel(){
-        model.setStartingBalance(new ValidDollars(123));
-        assertEquals(new ValidDollars(123),model.stockMarketTableModel().startingBalance());
-        //assertEquals(model.stockMarketProjection(), model.stockMarketTableModel().stockMarketProjection());
+        model.setStartingBalance(ValidDollars.create(123));
+        assertEquals(ValidDollars.create(123),model.stockMarketTableModel().startingBalance());
+    }
+    @Test
+    public void changingStartingCostBasisShouldChangeStockMarketModel(){
+        model.setStartingCostBasis(ValidDollars.create(39));
+        assertEquals(ValidDollars.create(39), model.stockMarketTableModel().startingCostBasis());
+    }
+    @Test
+    public void changingYearlySpendingShouldChangeStockMarketTableModel(){
+        model.setYearlySpending(ValidDollars.create(423));
+        assertEquals(ValidDollars.create(423), model.stockMarketTableModel().yearlySpending());
     }
 
 }

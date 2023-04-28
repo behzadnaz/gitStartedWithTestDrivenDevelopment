@@ -1,17 +1,23 @@
 package com.behzad.finances.domain;
 
-import javax.swing.*;
+import com.behzad.finances.ui.RenderTarget;
+import com.behzad.finances.ui.Resources;
+
 import java.awt.*;
 import java.text.NumberFormat;
 import java.util.Locale;
 
 public class ValidDollars extends Dollars{
+    public static  final double MAX_VALUE = 1000000000d; //one beeeelion dollars
+    public static  final double MIN_VALUE = -1000000000d;
     private double amount;
 
-    public ValidDollars (int amount){
-        this.amount = amount;
+    public static Dollars create(double amount){
+        if(inRange(amount)) return new ValidDollars(amount);
+        else return new InvalidDollars();
     }
-    public ValidDollars(double amount){
+
+    private ValidDollars(double amount){
         this.amount = amount;
     }
 
@@ -23,21 +29,26 @@ public class ValidDollars extends Dollars{
         return true;
     }
 
+    private static boolean inRange(double value){
+
+        return (value >= MIN_VALUE) && (value <= MAX_VALUE);
+    }
+
     public Dollars plus(Dollars dollars) {
         if (!dollars.isValid()) return new InvalidDollars();
-        return new ValidDollars(this.amount + amount(dollars));
+        return create(this.amount + amount(dollars));
     }
     public Dollars minus(Dollars dollars) {
         if (!dollars.isValid()) return new InvalidDollars();
-        return new ValidDollars(this.amount - amount(dollars));
+        return create(this.amount- amount(dollars));
     }
     public Dollars subtractToZero(Dollars dollars) {
         if (!dollars.isValid()) return new InvalidDollars();
         double result = this.amount -amount(dollars);
-        return new ValidDollars(Math.max(0, result));
+        return create(Math.max(0, result));
     }
     public Dollars percentage(double percent) {
-        return new ValidDollars(amount * percent / 100.0);
+        return create(amount * percent / 100.0);
     }
 
     public Dollars min(Dollars value2) {
@@ -52,12 +63,11 @@ public class ValidDollars extends Dollars{
         return Math.round(this.amount);
     }
 
-    public void render(JLabel label) {
-        label.setToolTipText(null);
-        label.setIcon(null);
-        label.setText(this.toString());
-        label.setForeground(Color.BLACK);
-        if(amount < 0) label.setForeground(Color.red);
+    public void render(Resources resources, RenderTarget target){
+        target.setText(this.toString());
+        target.setIcon(null, null);
+        target.setForeGroundColor(Color.BLACK);
+        if(amount < 0) target.setForeGroundColor(Color.red);
     }
 
     @Override

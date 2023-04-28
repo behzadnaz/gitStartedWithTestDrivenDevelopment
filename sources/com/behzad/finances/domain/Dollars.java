@@ -1,11 +1,9 @@
 package com.behzad.finances.domain;
 
+import com.behzad.finances.ui.Resources;
 import com.behzad.finances.ui.SelfRenderable;
-
 import javax.swing.*;
-import java.awt.*;
-import java.text.NumberFormat;
-import java.util.Locale;
+
 
 public abstract class Dollars implements SelfRenderable {
 
@@ -13,6 +11,7 @@ public abstract class Dollars implements SelfRenderable {
     public static Dollars parse(String text){
 
         if(text.equals(")")) return new InvalidDollars();
+        if(text.contains("a")) return new InvalidDollars();
         if(text.endsWith("d")) return new InvalidDollars();
         if(text.contains("e"))  return new InvalidDollars();
         if(text.endsWith("f")) return new InvalidDollars();
@@ -24,12 +23,12 @@ public abstract class Dollars implements SelfRenderable {
 
         if(text.startsWith("$")) text = text.substring(1);
         if(text.startsWith("-$")) text = "-" + text.substring(2);
-        if(text.isEmpty()) return new ValidDollars(0);
-        if (text.equals("-")) return new ValidDollars(0);
+        if(text.isEmpty()) return ValidDollars.create(0);
+        if (text.equals("-")) return ValidDollars.create(0);
         text = text.replace(",", "");
 
         try {
-            return new ValidDollars(Double.parseDouble(text));
+            return ValidDollars.create(Double.parseDouble(text));
         }
         catch (NumberFormatException e){
             return new InvalidDollars();
@@ -46,6 +45,7 @@ public abstract class Dollars implements SelfRenderable {
     public abstract Dollars subtractToZero(Dollars dollars);
     public abstract Dollars percentage(double dollars);
     public abstract Dollars min(Dollars value2);
-    public abstract void render(JLabel label );
+    //public abstract void render(Resources resources, JLabel label );
+
 
 }

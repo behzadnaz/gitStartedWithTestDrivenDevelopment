@@ -1,11 +1,8 @@
 package com.behzad.finances.ui;
 
-import com.behzad.finances.domain.Dollars;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
-import java.net.URL;
 
 public class ForecastTable extends JTable {
 
@@ -19,14 +16,14 @@ public class ForecastTable extends JTable {
         super(model);
         setDefaultRenderer(SelfRenderable.class, selfRenderer());
     }
-
     private TableCellRenderer selfRenderer(){
+
         return new DefaultTableCellRenderer(){
             private static final long serialVersionID = 1L;
 
             public void setValue(Object value){
                 SelfRenderable renderable = (SelfRenderable) value;
-                renderable.render(this);
+                renderable.render(new Resources(),new LabelRenderTargetAdapter(this));
 
             }
         };

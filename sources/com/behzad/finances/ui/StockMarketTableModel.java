@@ -12,7 +12,7 @@ public class StockMarketTableModel extends AbstractTableModel {
 
     private static final long serialVersionUID= 1l;
     private static final String [] COLUMN_TITLES = {"Year", "Starting Balance", "Cost Basis", "Sales", "Growth", "Ending Balance"};
-   private static final Class<?> [] COLUMN_CLASSES = {Year.class, Dollars.class, SelfRenderable.class,SelfRenderable.class,SelfRenderable.class,SelfRenderable.class   };
+   private static final Class<?> [] COLUMN_CLASSES = {Year.class, SelfRenderable.class, SelfRenderable.class,SelfRenderable.class,SelfRenderable.class,SelfRenderable.class   };
     private StockMarketProjection projection;
 
     public StockMarketTableModel(StockMarketProjection projection) {
@@ -63,5 +63,12 @@ public class StockMarketTableModel extends AbstractTableModel {
 
     public Dollars startingBalance() {
         return  projection.getYearOffset(0).startingBalance();
+    }
+
+    public Dollars startingCostBasis() {
+        return  projection.getYearOffset(0).startingCostBasis();
+    }
+    public Dollars yearlySpending(){
+        return projection.getYearOffset(0).totalSellOrders();
     }
 }

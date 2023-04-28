@@ -61,8 +61,8 @@ public class _ForecastTableTest {
     public void tableShouldHaveSelfRenderableObjectsRenderThemselves(){
         SelfRenderable renderable = new SelfRenderable() {
             @Override
-            public void render(JLabel label) {
-                label.setText("I render myself");
+            public void render(Resources resources, RenderTarget target){
+                target.setText("I render myself");
             }
         };
         DefaultTableModel tableModel = new DefaultTableModel(0,1){
