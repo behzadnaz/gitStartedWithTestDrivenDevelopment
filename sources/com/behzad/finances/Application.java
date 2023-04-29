@@ -10,7 +10,7 @@ public class Application {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new ApplicationFrame(new ApplicationModel()).setVisible(true);
+                ApplicationFrame.newWindow();
             }
         });
     }
