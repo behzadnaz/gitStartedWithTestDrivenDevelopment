@@ -1,7 +1,5 @@
 package com.behzad.finances.ui;
 
-import com.behzad.finances.domain.Dollars;
-import com.behzad.finances.domain.ValidDollars;
 import org.junit.*;
 
 import javax.swing.*;
@@ -9,27 +7,30 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.InvocationTargetException;
+import java.io.File;
+import java.util.Date;
 
 import static org.junit.Assert.*;
 
 public class _ApplicationFrameTest {
 
     private ApplicationFrame frame;
-    private ApplicationModel model;
+    private __ApplicationModelSpy mockModel;
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenuItem newMenuItem;
     private JMenuItem closeMenuItem;
+    private JMenuItem  saveAsMenuItem;
 
     @Before
     public void setup() throws Exception {
-        model = new ApplicationModel();
-        frame = new ApplicationFrame(model);
+        mockModel = new __ApplicationModelSpy();
+        frame = new ApplicationFrame(mockModel);
         menuBar = frame.getJMenuBar();
         fileMenu = menuBar.getMenu(0);
         newMenuItem = fileMenu.getItem(0);
         closeMenuItem = fileMenu.getItem(1);
+        saveAsMenuItem = fileMenu.getItem(2);
     }
     @After
     public void teardown(){
@@ -74,7 +75,7 @@ public class _ApplicationFrameTest {
     }
     @Test
     public void shouldExitApplicationWhenWindowsClose(){
-        assertEquals("should exit on closed",WindowConstants.EXIT_ON_CLOSE,frame.getDefaultCloseOperation());
+        assertEquals("should exit on closed",WindowConstants.DISPOSE_ON_CLOSE,frame.getDefaultCloseOperation());
     }
 
     @Test
@@ -91,13 +92,16 @@ public class _ApplicationFrameTest {
         assertEquals("# of menus", 1, menuBar.getMenuCount());
 
         assertEquals("file menu title", "File", fileMenu.getText());
-        assertEquals("# menu items", 2, fileMenu.getItemCount());
+        assertEquals("# menu items", 3, fileMenu.getItemCount());
 
-        assertEquals("'new' menu item name", "New", newMenuItem.getText());
-        assertEquals("'new' accelerator key", KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.META_MASK), newMenuItem.getAccelerator());
+        assertMenuItemEquals(newMenuItem, "New", KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.META_MASK));
+        assertMenuItemEquals(closeMenuItem, "Close", KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_MASK));
+        assertMenuItemEquals(saveAsMenuItem, "Save As ...", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.SHIFT_MASK | InputEvent.META_MASK));
+    }
 
-        assertEquals("'close' menu item name", "Close", closeMenuItem.getText());
-        assertEquals("'close' accelerator key", KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_DOWN_MASK), closeMenuItem.getAccelerator());
+    private void assertMenuItemEquals(JMenuItem menuItem, String expectedName, KeyStroke expectedAccelerator) {
+        assertEquals(expectedName +"menu item name", expectedName, menuItem.getText());
+        assertEquals(expectedName + "accelerator key", expectedAccelerator, menuItem.getAccelerator());
     }
 
     @Test
@@ -119,5 +123,63 @@ public class _ApplicationFrameTest {
         assertTrue("frame should have been disposed",!frame.isDisplayable());
 
     }
+    @Test
+    public void saveAsMenuItemShouldShowSaveAsDialog() throws Throwable{
 
+        final FileDialog saveAsDialog = saveAsDialog();
+        assertNotNull("Save as dialog should  be created");
+
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+               saveAsMenuItem.doClick();
+            }
+        });
+
+        assertEventuallyTrue("Save as dialog should be visible", 1000, new AsynchronousAssertion(){
+            @Override
+            public boolean assertTrue() {
+                return saveAsDialog.isVisible();
+            }
+        });
+        assertEquals("Save as dialog mode should be 'save'", FileDialog.SAVE, saveAsDialog.getMode());
+        assertEquals("Save as dialog title", "Save as",  saveAsDialog.getTitle());
+    }
+
+    @Test
+    public void saveAsDialogShouldTellApplicationModelToSaveWhenSaveButtonPushed(){
+
+      saveAsDialog().setDirectory("/example");
+      saveAsDialog().setFile("filename");
+      frame.doSave();
+      assertEquals("applicationModel should be told to save",new File("/example/filename"), mockModel.saveCalledWith);
+    }
+    @Test
+    public void saveAsDialogShouldDoNothingWhenCancelButtonPushed(){
+
+        saveAsDialog().setDirectory(null);
+        saveAsDialog().setFile(null);
+        frame.doSave();
+        assertNull("application model should not have been told to save", mockModel.saveCalledWith);
+    }
+
+    private FileDialog saveAsDialog() {
+        return (FileDialog) frame.getOwnedWindows()[0];
+    }
+
+    abstract class AsynchronousAssertion {
+        abstract boolean assertTrue();
+
+    }
+
+    private void assertEventuallyTrue(String message, int timeout, AsynchronousAssertion check) {
+        long startTime = new Date().getTime();
+        while(!check.assertTrue()){
+            Thread.yield();
+            long elapsedMilliseconds = new Date().getTime() - startTime;
+            if(elapsedMilliseconds > timeout) fail(message + " within " + timeout + " milliseconds ");
+        }
+    }
 }
+
+

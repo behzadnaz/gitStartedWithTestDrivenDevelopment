@@ -2,6 +2,7 @@ package com.behzad.finances.domain;
 
 import com.behzad.finances.ui.RenderTarget;
 import com.behzad.finances.ui.Resources;
+import com.behzad.finances.util.UnreachableCodeException;
 
 
 public class InvalidDollars extends Dollars{
@@ -12,17 +13,22 @@ public class InvalidDollars extends Dollars{
     }
 
     @Override
-    public Dollars plus(Dollars dollars) {
+    protected double toCoreDataType() {
+        throw new UnreachableCodeException();
+    }
+
+    @Override
+    public Dollars plus(Dollars operand) {
         return new InvalidDollars();
     }
 
     @Override
-    public Dollars minus(Dollars dollars) {
+    public Dollars minus(Dollars operand) {
         return new InvalidDollars();
     }
 
     @Override
-    public Dollars subtractToZero(Dollars dollars) {
+    public Dollars subtractToZero(Dollars operand) {
         return new InvalidDollars();
     }
 
@@ -32,7 +38,7 @@ public class InvalidDollars extends Dollars{
     }
 
     @Override
-    public Dollars min(Dollars value2) {
+    public Dollars min(Dollars operand) {
         return new InvalidDollars();
     }
 
@@ -47,13 +53,15 @@ public class InvalidDollars extends Dollars{
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof InvalidDollars);
+        if (obj == null) return false;
+        Dollars that =  (Dollars) obj;
+
+        return !that.isValid();
     }
 
     @Override
     public int hashCode() {
         return 13;
     }
-
 
 }

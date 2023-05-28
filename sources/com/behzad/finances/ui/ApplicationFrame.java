@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 public class ApplicationFrame extends JFrame {
 
@@ -14,6 +15,7 @@ public class ApplicationFrame extends JFrame {
     public static final Point INITIAL_POSITION = new Point(400, 300);
     public static final Dimension INITIAL_SIZE = new Dimension(900,400);
     public ApplicationModel model;
+    private FileDialog saveAsDialog;
 
 
     public static void newWindow() {
@@ -28,7 +30,7 @@ public class ApplicationFrame extends JFrame {
     }
 
     private void configureWindow() {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocation(INITIAL_POSITION);
         setSize(INITIAL_SIZE);
     }
@@ -41,6 +43,7 @@ public class ApplicationFrame extends JFrame {
         contentPane.add(BorderLayout.NORTH, configurationPanel());
 
         setJMenuBar(menuBar());
+        saveAsDialog = new FileDialog(ApplicationFrame.this, "Save as", FileDialog.SAVE);
 
     }
 
@@ -57,31 +60,48 @@ public class ApplicationFrame extends JFrame {
         JMenu fileMenu = new JMenu("File");
         fileMenu.add(newMenuItem());
         fileMenu.add(closeMenuItem());
+        fileMenu.add(saveAsMenuItem());
         menuBar.add(fileMenu);
         return menuBar;
     }
 
     private JMenuItem newMenuItem() {
-        JMenuItem newMenuItem = new JMenuItem("New");
-        newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.META_MASK));
-        newMenuItem.addActionListener(new ActionListener() {
+
+        return menuItem("New", KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.META_MASK), new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 newWindow();
             }
         });
-        return newMenuItem;
     }
 
     private JMenuItem closeMenuItem() {
-        JMenuItem closeMenuItem = new JMenuItem("Close");
-        closeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_DOWN_MASK));
-        closeMenuItem.addActionListener(new ActionListener() {
+        return menuItem("Close", KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_MASK), new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
             }
         });
-        return closeMenuItem;
+    }
+    private JMenuItem saveAsMenuItem(){
+        return menuItem("Save As ...", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.SHIFT_MASK | InputEvent.META_MASK), new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveAsDialog.setVisible(true);
+                doSave();
+            }
+        });
+    }
+    void doSave(){
+        String directory = saveAsDialog.getDirectory();
+        String file = saveAsDialog.getFile();
+        if(file != null) model.save(new File(directory, file));
+    }
+
+    private JMenuItem menuItem(String name, KeyStroke accelerator, ActionListener action) {
+        JMenuItem newMenuItem = new JMenuItem(name);
+        newMenuItem.setAccelerator(accelerator);
+        newMenuItem.addActionListener(action);
+        return newMenuItem;
     }
 }

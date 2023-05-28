@@ -1,6 +1,8 @@
 package com.behzad.finances.ui;
 
 import com.behzad.finances.domain.Dollars;
+import com.behzad.finances.domain.UserEnteredDollars;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -74,7 +76,7 @@ public final class DollarsTextField extends JPanel {
         if(textField != null) textField.setForeground(color);
     }
     public Dollars getDollars() {
-        return Dollars.parse(textField.getText());
+        return new UserEnteredDollars(textField.getText());
     }
 
     public  void addTextChangeListener(final ChangeListener listener){

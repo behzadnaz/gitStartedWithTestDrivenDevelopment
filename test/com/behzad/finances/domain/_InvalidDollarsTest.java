@@ -1,6 +1,7 @@
 package com.behzad.finances.domain;
 
 import com.behzad.finances.ui.Resources;
+import com.behzad.finances.util.UnreachableCodeException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,12 +19,18 @@ public class _InvalidDollarsTest {
     public void setup(){
         invalidA = new InvalidDollars();
         invalidB = new InvalidDollars();
-        valid = (ValidDollars) ValidDollars.create(13);
+        valid = (ValidDollars) new ValidDollars(13);
     }
 
     @Test
     public void isValid(){
         assertFalse(invalidA.isValid());
+    }
+
+    @Test(expected = UnreachableCodeException.class)
+    public void coreDataType_IsAnError(){
+        invalidA.toCoreDataType();
+
     }
 
     @Test
@@ -83,8 +90,11 @@ public class _InvalidDollarsTest {
     @Test
     public void valueObject(){
         assertEquals("$???", invalidA.toString());
-        assertTrue("invalid dollars always equal", invalidA.equals(invalidB));
-        assertFalse("invalid dollar don't equal anything else", invalidA.equals(valid));
+        assertTrue("invalid dollars should always be equal", invalidA.equals(invalidB));
+        assertFalse("invalid dollar shouldn't equal valid dollars", invalidA.equals(valid));
+        assertFalse("invalid dollars shouldn't equal valid user-entered dollars",invalidA.equals(new UserEnteredDollars("1")));
+        assertTrue("invalid dollars should equal invalid user-entered dollars",invalidA.equals(new UserEnteredDollars("xxx")));
+
         assertFalse("shouldn't below up when comparing to null", invalidA.equals(null));
         assertTrue("equal dollars should have same hash code", invalidA.hashCode() == invalidB.hashCode());
 

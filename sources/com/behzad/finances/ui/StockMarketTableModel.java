@@ -8,8 +8,8 @@ import javax.swing.table.*;
 public class StockMarketTableModel extends AbstractTableModel {
 
     private static final long serialVersionUID= 1l;
-    private static final String [] COLUMN_TITLES = {"Year", "Starting Balance", "Cost Basis", "Sell orders", "Taxes" , "Growth", "Ending Balance"};
-   private static final Class<?> [] COLUMN_CLASSES = {Year.class, SelfRenderable.class, SelfRenderable.class, SelfRenderable.class,SelfRenderable.class,SelfRenderable.class,SelfRenderable.class   };
+    public static final String [] COLUMN_TITLES = {"Year", "Starting Balance", "Cost Basis", "Sell orders", "Taxes" , "Growth", "Ending Balance"};
+    public static final Class<?> [] COLUMN_CLASSES = {Year.class, SelfRenderable.class, SelfRenderable.class, SelfRenderable.class,SelfRenderable.class,SelfRenderable.class,SelfRenderable.class   };
     private StockMarketProjection projection;
 
     public StockMarketTableModel(StockMarketProjection projection) {

@@ -1,6 +1,9 @@
 package com.behzad.finances.ui;
 
-import com.behzad.finances.domain.Dollars;
+
+import static org.junit.Assert.*;
+
+
 import com.behzad.finances.domain.ValidDollars;
 import net.miginfocom.swing.MigLayout;
 import org.junit.*;
@@ -8,7 +11,6 @@ import org.junit.*;
 import javax.swing.*;
 import java.awt.*;
 
-import static org.junit.Assert.*;
 
 public class _ConfigurationPanelTest {
 
@@ -64,45 +66,27 @@ public class _ConfigurationPanelTest {
 
     @Test
     public void startingBalanceFieldShouldUpdateApplicationModel(){
-        MockApplicationModel mockModel = new MockApplicationModel();
+        __ApplicationModelSpy mockModel = new __ApplicationModelSpy();
         panel = new ConfigurationPanel(mockModel);
-
         startingBalanceField().setText("668");
-        assertEquals("application model should be updated", ValidDollars.create(668), mockModel.setStartingBalanceCalledWith);
+        assertEquals("application model should be updated", new ValidDollars(668), mockModel.setStartingBalanceCalledWith);
     }
 
     @Test
     public void costBasisFieldUpdatesApplicationModel(){
-        MockApplicationModel mockModel = new MockApplicationModel();
+        __ApplicationModelSpy mockModel = new __ApplicationModelSpy();
         panel = new ConfigurationPanel(mockModel);
 
         costBasisField().setText("670");
-        assertEquals("application model should be updated", ValidDollars.create(670), mockModel.setCostBasisCalledWith);
+        assertEquals("application model should be updated", new ValidDollars(670), mockModel.setCostBasisCalledWith);
     }
     @Test
     public void yearlySpendingFieldUpdatesApplicationModel(){
-        MockApplicationModel mockModel = new MockApplicationModel();
+        __ApplicationModelSpy mockModel = new __ApplicationModelSpy();
         panel = new ConfigurationPanel(mockModel);
 
         yearlySpendingField().setText("672");
-        assertEquals("application model should be updated", ValidDollars.create(672), mockModel.setYearlySpendingCalledWith);
-    }
-
-    private static class MockApplicationModel extends ApplicationModel{
-        public Dollars setStartingBalanceCalledWith;
-        public Dollars setCostBasisCalledWith;
-        public Dollars setYearlySpendingCalledWith;
-
-        @Override
-        public void setStartingBalance(Dollars startingBalance) {
-            setStartingBalanceCalledWith = startingBalance;
-        }
-        @Override
-        public void setStartingCostBasis(Dollars startingCostBasis) {
-            setCostBasisCalledWith = startingCostBasis;
-        }
-        @Override
-        public void setYearlySpending(Dollars yearlySpending){ setYearlySpendingCalledWith = yearlySpending;}
+        assertEquals("application model should be updated", new ValidDollars(672), mockModel.setYearlySpendingCalledWith);
     }
 
 

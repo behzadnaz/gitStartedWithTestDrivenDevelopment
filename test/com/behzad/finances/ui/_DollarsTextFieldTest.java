@@ -20,7 +20,7 @@ public class _DollarsTextFieldTest {
     @Before
     public void setup(){
 
-        field = new DollarsTextField(ValidDollars.create(42));
+        field = new DollarsTextField(new ValidDollars(42));
         Component[] components = field.getComponents();
         iconPanel = (JPanel)components[0];
         iconComponent = (JLabel) (iconPanel.getComponents()[0]);
@@ -34,7 +34,7 @@ public class _DollarsTextFieldTest {
     }
     @Test
     public void canRetrieveAmount(){
-        assertEquals(ValidDollars.create(42), field.getDollars());
+        assertEquals(new ValidDollars(42), field.getDollars());
     }
 
     @Test
@@ -45,7 +45,7 @@ public class _DollarsTextFieldTest {
     @Test
     public void changingTextChangeDollarAmount(){
         field.setText("1024");
-        assertEquals(ValidDollars.create(1024), field.getDollars());
+        assertEquals(new ValidDollars(1024), field.getDollars());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class _DollarsTextFieldTest {
     @Test
     public void emptyStringIsZeroDollars(){
         field.setText("");
-        assertEquals(ValidDollars.create(0),field.getDollars());
+        assertEquals(new ValidDollars(0),field.getDollars());
     }
     @Test
     public void fieldTextIsNotReformattedWhenFieldLosesFocusAndTheValidIsInvalid() throws Exception {

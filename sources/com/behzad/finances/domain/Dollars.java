@@ -5,48 +5,33 @@ import com.behzad.finances.ui.SelfRenderable;
 import com.behzad.finances.util.NotImplementedException;
 
 import javax.swing.*;
+import java.io.Serializable;
 
 
 public abstract class Dollars implements SelfRenderable {
 
+    static  final double MAX_VALUE = 1000000000d; //one beeeelion dollars
+    static  final double MIN_VALUE = -1000000000d;
 
-    public static Dollars parse(String text){
-
-        if(text.equals(")")) return new InvalidDollars();
-        if(text.contains("a")) return new InvalidDollars();
-        if(text.endsWith("d")) return new InvalidDollars();
-        if(text.contains("e"))  return new InvalidDollars();
-        if(text.endsWith("f")) return new InvalidDollars();
-
-        boolean parenthesis = false;
-        if (text.startsWith("(")) { text = text.substring(1); parenthesis = true;}
-        if (text.endsWith(")")) { text = text.substring(0, text.length() - 1); parenthesis = true;}
-        if (parenthesis) text = "-" + text;
-
-        if(text.startsWith("$")) text = text.substring(1);
-        if(text.startsWith("-$")) text = "-" + text.substring(2);
-        if(text.isEmpty()) return ValidDollars.create(0);
-        if (text.equals("-")) return ValidDollars.create(0);
-        text = text.replace(",", "");
-
-        try {
-            return ValidDollars.create(Double.parseDouble(text));
-        }
-        catch (NumberFormatException e){
-            return new InvalidDollars();
-        }
-
+    protected static Dollars create(double amount){
+        if(inRange(amount)) return new ValidDollars(amount);
+        else return new InvalidDollars();
     }
-
+    protected static boolean inRange(double value){
+        return (value >= MIN_VALUE) && (value <= MAX_VALUE);
+    }
     public static Dollars min(Dollars value1, Dollars value2){
         return value1.min(value2);
     }
-    public  Dollars flipSign(){return ValidDollars.create(0).minus(this);}
+    public  Dollars flipSign(){return new ValidDollars(0).minus(this);}
 
     public abstract boolean isValid();
-    public abstract Dollars plus(Dollars dollars);
-    public abstract Dollars minus(Dollars dollars);
-    public abstract Dollars subtractToZero(Dollars dollars);
+
+    protected abstract double toCoreDataType();
+
+    public abstract Dollars plus(Dollars operand);
+    public abstract Dollars minus(Dollars operand);
+    public abstract Dollars subtractToZero(Dollars operand);
     public abstract Dollars percentage(double dollars);
-    public abstract Dollars min(Dollars value2);
+    public abstract Dollars min(Dollars operand);
 }
