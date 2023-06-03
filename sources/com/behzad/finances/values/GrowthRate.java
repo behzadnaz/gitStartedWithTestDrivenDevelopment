@@ -1,4 +1,4 @@
-package com.behzad.finances.domain;
+package com.behzad.finances.values;
 
 import com.behzad.finances.util.Require;
 

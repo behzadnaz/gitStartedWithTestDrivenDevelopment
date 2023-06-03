@@ -1,6 +1,7 @@
 package com.behzad.finances.ui;
 
 import com.behzad.finances.domain.*;
+import com.behzad.finances.values.*;
 import org.junit.*;
 
 import javax.swing.event.TableModelEvent;

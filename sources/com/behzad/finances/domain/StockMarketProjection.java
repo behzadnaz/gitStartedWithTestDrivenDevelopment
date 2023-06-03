@@ -1,9 +1,11 @@
 package com.behzad.finances.domain;
 
 import com.behzad.finances.util.Require;
+import com.behzad.finances.values.Dollars;
+import com.behzad.finances.values.Year;
 
 public class StockMarketProjection {
-    private  Year startingYear;
+    private Year startingYear;
     private final Year endingYear;
     private final Dollars sellEveryYear;
     private StockMarketYear[] years;

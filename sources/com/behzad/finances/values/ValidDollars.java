@@ -1,4 +1,4 @@
-package com.behzad.finances.domain;
+package com.behzad.finances.values;
 
 import com.behzad.finances.ui.RenderTarget;
 import com.behzad.finances.ui.Resources;
@@ -8,13 +8,13 @@ import java.awt.*;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class ValidDollars extends Dollars{
+public class ValidDollars extends Dollars {
 
     private double amount;
 
-    public ValidDollars(double amount){
-        Require.that(inRange(amount), "dollar amount [" + amount + "] outside valid range");
-        this.amount = amount;
+    public ValidDollars(double rangeLimitedAmount){
+        Require.that(inRange(rangeLimitedAmount), "dollar rangeLimitedAmount [" + rangeLimitedAmount + "] outside valid range");
+        this.amount = rangeLimitedAmount;
     }
 
     public boolean isValid() {

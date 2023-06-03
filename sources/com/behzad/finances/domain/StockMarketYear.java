@@ -1,5 +1,7 @@
 package com.behzad.finances.domain;
 
+import com.behzad.finances.values.*;
+
 public class StockMarketYear {
 
     private Dollars startingBalance;

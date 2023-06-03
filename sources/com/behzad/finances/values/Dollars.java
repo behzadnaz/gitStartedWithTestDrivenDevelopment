@@ -1,11 +1,6 @@
-package com.behzad.finances.domain;
+package com.behzad.finances.values;
 
-import com.behzad.finances.ui.Resources;
 import com.behzad.finances.ui.SelfRenderable;
-import com.behzad.finances.util.NotImplementedException;
-
-import javax.swing.*;
-import java.io.Serializable;
 
 
 public abstract class Dollars implements SelfRenderable {

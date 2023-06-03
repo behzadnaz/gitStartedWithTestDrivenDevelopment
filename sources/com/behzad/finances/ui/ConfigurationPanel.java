@@ -2,12 +2,8 @@ package com.behzad.finances.ui;
 
 import javax.swing.*;
 
-import com.behzad.finances.domain.Dollars;
-import com.behzad.finances.domain.ValidDollars;
 import com.behzad.finances.ui.DollarsTextField.ChangeListener;
 import net.miginfocom.swing.MigLayout;
-
-import java.awt.*;
 
 
 public class ConfigurationPanel extends JPanel {

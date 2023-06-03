@@ -1,8 +1,8 @@
 package com.behzad.finances.ui;
 
 import com.behzad.finances.domain.*;
+import com.behzad.finances.values.*;
 
-import javax.swing.table.TableModel;
 import java.io.File;
 
 public class ApplicationModel {

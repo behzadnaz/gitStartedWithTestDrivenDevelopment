@@ -4,7 +4,7 @@ package com.behzad.finances.ui;
 import static org.junit.Assert.*;
 
 
-import com.behzad.finances.domain.ValidDollars;
+import com.behzad.finances.values.ValidDollars;
 import net.miginfocom.swing.MigLayout;
 import org.junit.*;
 

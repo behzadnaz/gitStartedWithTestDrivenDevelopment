@@ -1,7 +1,8 @@
-package com.behzad.finances.domain;
+package com.behzad.finances.values;
 
 import com.behzad.finances.ui.Resources;
 import com.behzad.finances.util.RequireException;
+import com.behzad.finances.values.*;
 import org.junit.*;
 
 import javax.swing.*;

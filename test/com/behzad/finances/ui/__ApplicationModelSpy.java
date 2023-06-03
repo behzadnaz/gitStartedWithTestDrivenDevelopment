@@ -1,6 +1,6 @@
 package com.behzad.finances.ui;
 
-import com.behzad.finances.domain.Dollars;
+import com.behzad.finances.values.Dollars;
 
 import java.io.File;
 

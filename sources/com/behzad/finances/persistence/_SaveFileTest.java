@@ -1,7 +1,6 @@
 package com.behzad.finances.persistence;
 
-import com.behzad.finances.domain.InvalidDollars;
-import com.behzad.finances.domain.ValidDollars;
+import com.behzad.finances.values.UserEnteredDollars;
 import org.junit.Rule;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
@@ -13,6 +12,8 @@ import static org.junit.Assert.*;
 public class _SaveFileTest {
     private File path;
     private SaveFile saveFile;
+    private UserEnteredDollars anyValue = new UserEnteredDollars("any");
+
     @Rule
     public TemporaryFolder tempDir = new TemporaryFolder();
 
@@ -25,23 +26,24 @@ public class _SaveFileTest {
     public void saveCreatesFile() throws IOException {
 
         assertFalse("assume test file does not exists", path.exists());
-        saveFile.save(new InvalidDollars());
+
+        saveFile.save(anyValue, anyValue, anyValue);
         assertTrue("file should now exists", path.exists());
     }
     @Test
     public void saveOverwritesAnExistingFile() throws IOException {
         writeFile("test");
         assertEquals("file size setup assumption", 4, path.length());
-        saveFile.save(new InvalidDollars());
+        saveFile.save(anyValue, anyValue, anyValue);
         String fileContents = readFile();
         assertFalse("file should have been overwritten", fileContents.startsWith("test"));
     }
-   // @Test
-    //public void saveWritersFileContents() throws IOException {
-    //    saveFile.save(new ValidDollars(1.23));//, new ValidDollars(10.24), new ValidDollars(100.25));
-    //    String expected = "com.behzad.finances,1\n$1.23\n";
-    //    assertEquals(expected, readFile());
-   // }
+   @Test
+   public void saveWritersFileContents() throws IOException {
+        saveFile.save(new UserEnteredDollars("1.23"), new UserEnteredDollars("10.24"), new UserEnteredDollars("100.25"));
+        String expected = "com.behzad.finances,1\n1.23\n10.24\n100.25\n";
+        assertEquals(expected, readFile());
+    }
     @Test
     public void saveWritesStartingBalance(){
         // saveFile.save(startingBalance);

@@ -1,7 +1,6 @@
 package com.behzad.finances.ui;
-import com.behzad.finances.domain.Dollars;
 
-import com.behzad.finances.domain.ValidDollars;
+import com.behzad.finances.values.ValidDollars;
 import org.junit.*;
 import javax.swing.*;
 import java.awt.*;

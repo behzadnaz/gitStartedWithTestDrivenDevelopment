@@ -1,7 +1,10 @@
-package com.behzad.finances.domain;
-
+package com.behzad.finances.values;
 import com.behzad.finances.ui.Resources;
 import com.behzad.finances.util.UnreachableCodeException;
+import com.behzad.finances.values.InvalidDollars;
+import com.behzad.finances.values.UserEnteredDollars;
+import com.behzad.finances.values.ValidDollars;
+import com.behzad.finances.values.__RenderTargetStub;
 import org.junit.Before;
 import org.junit.Test;
 

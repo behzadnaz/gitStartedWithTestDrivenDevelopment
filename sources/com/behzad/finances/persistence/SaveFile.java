@@ -1,6 +1,6 @@
 package com.behzad.finances.persistence;
 
-import com.behzad.finances.domain.Dollars;
+import com.behzad.finances.values.UserEnteredDollars;
 
 import java.io.*;
 
@@ -10,11 +10,13 @@ public class SaveFile {
         this.path =path;
     }
 
-    public void save(Dollars startingBalance) throws IOException {
+    public void save(UserEnteredDollars startingBalance, UserEnteredDollars costBasis, UserEnteredDollars yearlySpending) throws IOException {
         Writer writer = new BufferedWriter(new FileWriter(path));
         try {
             writer.write("com.behzad.finances,1\n");
-            writer.write(startingBalance.toString() + "\n");
+            writer.write(startingBalance.getUserText() + "\n");
+            writer.write(costBasis.getUserText() + "\n");
+            writer.write(yearlySpending.getUserText()+ "\n");
         } finally {
             writer.close();
         }

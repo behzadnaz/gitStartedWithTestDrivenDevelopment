@@ -1,7 +1,7 @@
 package com.behzad.finances.ui;
 
-import com.behzad.finances.domain.Dollars;
-import com.behzad.finances.domain.UserEnteredDollars;
+import com.behzad.finances.values.Dollars;
+import com.behzad.finances.values.UserEnteredDollars;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

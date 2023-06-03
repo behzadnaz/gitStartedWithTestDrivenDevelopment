@@ -1,10 +1,16 @@
-package com.behzad.finances.domain;
+package com.behzad.finances.values;
 import com.behzad.finances.ui.RenderTarget;
+import com.behzad.finances.ui.Resources;
+import com.behzad.finances.util.UnreachableCodeException;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.swing.*;
 import java.awt.*;
 
- class __RenderTargetStub implements RenderTarget {
+import static org.junit.Assert.*;
+
+class __RenderTargetStub implements RenderTarget {
         public Icon icon;
         public String text;
         public Color foregroundColor;
@@ -16,5 +22,7 @@ import java.awt.*;
                this.toolTipText = toolTipText;
         }
         public void setForeGroundColor(Color color){this.foregroundColor = color;}
+
+
 }
 

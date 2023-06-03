@@ -1,7 +1,10 @@
-package com.behzad.finances.domain;
+package com.behzad.finances.values;
 
 import com.behzad.finances.ui.RenderTarget;
 import com.behzad.finances.ui.Resources;
+import com.behzad.finances.values.Dollars;
+import com.behzad.finances.values.InvalidDollars;
+import com.behzad.finances.values.ValidDollars;
 
 public class UserEnteredDollars extends Dollars {
 
@@ -35,9 +38,7 @@ public class UserEnteredDollars extends Dollars {
         catch (NumberFormatException e){
             return new InvalidDollars();
         }
-
     }
-
     @Override
     public boolean isValid() {
         return backingDollars.isValid();
@@ -76,6 +77,9 @@ public class UserEnteredDollars extends Dollars {
     @Override
     public void render(Resources resources, RenderTarget target) {
         backingDollars.render(resources,target);
+    }
+    public String getUserText() {
+        return userText;
     }
     @Override
     public String toString(){

@@ -1,5 +1,6 @@
 package com.behzad.finances.domain;
 
+import com.behzad.finances.values.*;
 import org.junit.*;
 
 import static org.junit.Assert.*;

@@ -1,7 +1,7 @@
 package com.behzad.finances.domain;
 
-import com.behzad.finances.domain.Dollars;
-import com.behzad.finances.domain.TaxRate;
+import com.behzad.finances.values.TaxRate;
+import com.behzad.finances.values.ValidDollars;
 import org.junit.*;
 import static org.junit.Assert.*;
 

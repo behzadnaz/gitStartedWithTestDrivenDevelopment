@@ -1,6 +1,7 @@
-package com.behzad.finances.domain;
+package com.behzad.finances.values;
 
 import com.behzad.finances.ui.Resources;
+import com.behzad.finances.values.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -82,6 +83,11 @@ public class _UserEnteredDollarsTest {
     public void isValid(){
         assertTrue(dollars1a.isValid());
     }
+    @Test
+    public void getUserText(){
+        assertEquals(" x y z ", new UserEnteredDollars(" x y z ").getUserText());
+    }
+
     @Test
     public void toCoreDataType(){
         assertEquals(1.234, new UserEnteredDollars("1.234").toCoreDataType(),0);

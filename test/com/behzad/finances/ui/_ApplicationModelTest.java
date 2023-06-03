@@ -1,9 +1,8 @@
 package com.behzad.finances.ui;
 
-import com.behzad.finances.domain.Dollars;
 import com.behzad.finances.domain.StockMarketProjection;
 import com.behzad.finances.domain.StockMarketYear;
-import com.behzad.finances.domain.ValidDollars;
+import com.behzad.finances.values.ValidDollars;
 import org.junit.*;
 import static org.junit.Assert.*;
 
