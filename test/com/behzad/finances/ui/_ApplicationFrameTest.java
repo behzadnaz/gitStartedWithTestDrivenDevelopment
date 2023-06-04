@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 import static org.junit.Assert.*;
@@ -127,7 +128,6 @@ public class _ApplicationFrameTest {
     public void saveAsMenuItemShouldShowSaveAsDialog() throws Throwable{
 
         final FileDialog saveAsDialog = saveAsDialog();
-        assertNotNull("Save as dialog should  be created");
 
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
@@ -153,6 +153,20 @@ public class _ApplicationFrameTest {
       saveAsDialog().setFile("filename");
       frame.doSave();
       assertEquals("applicationModel should be told to save",new File("/example/filename"), mockModel.saveCalledWith);
+    }
+    @Test
+    public void saveAsDialogShouldHandleSaveExceptionGracefully(){
+        class ExceptionThrowingApplicationModel extends __ApplicationModelSpy {
+            @Override
+            public void save(File saveFile) throws IOException {
+                throw new IOException("generic Exception");
+            }
+        }
+            frame = new ApplicationFrame(new ExceptionThrowingApplicationModel());
+            saveAsDialog().setDirectory("/example");
+            saveAsDialog().setFile("filename");
+            frame.doSave();
+            //TODO: Assert that we're getting a clean dialog on IOException
     }
     @Test
     public void saveAsDialogShouldDoNothingWhenCancelButtonPushed(){

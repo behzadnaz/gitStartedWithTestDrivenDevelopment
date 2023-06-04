@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 
 public class ApplicationFrame extends JFrame {
 
@@ -92,10 +93,15 @@ public class ApplicationFrame extends JFrame {
             }
         });
     }
+    //non-private for testing purposes
     void doSave(){
-        String directory = saveAsDialog.getDirectory();
-        String file = saveAsDialog.getFile();
-        if(file != null) model.save(new File(directory, file));
+        try {
+            String directory = saveAsDialog.getDirectory();
+            String file = saveAsDialog.getFile();
+            if(file != null) model.save(new File(directory, file));
+        }catch (IOException e){
+           // JOptionPane.showMessageDialog(this, "Could not save file:" + e.getLocalizedMessage(),"Save File", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     private JMenuItem menuItem(String name, KeyStroke accelerator, ActionListener action) {

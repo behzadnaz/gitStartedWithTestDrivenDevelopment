@@ -57,14 +57,9 @@ public class ApplicationModel {
     public Dollars startingCostBasis(){return startingCostBasis;}
     public Dollars yearlySpending(){return yearlySpending; }
 
-    public void save(File saveFile){
+    public void save(File saveFile) throws IOException{
         System.out.println("save called " + saveFile );
-        try {
-            new SaveFile(saveFile).save(startingBalance, startingCostBasis,yearlySpending);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
+        new SaveFile(saveFile).save(startingBalance, startingCostBasis,yearlySpending);
     }
 
 }

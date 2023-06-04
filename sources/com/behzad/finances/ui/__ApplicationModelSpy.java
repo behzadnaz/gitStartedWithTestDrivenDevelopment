@@ -4,6 +4,7 @@ import com.behzad.finances.values.Dollars;
 import com.behzad.finances.values.UserEnteredDollars;
 
 import java.io.File;
+import java.io.IOException;
 
 public class __ApplicationModelSpy extends ApplicationModel {
     public UserEnteredDollars setStartingBalanceCalledWith;
@@ -26,7 +27,7 @@ public class __ApplicationModelSpy extends ApplicationModel {
         setYearlySpendingCalledWith = yearlySpending;
     }
     @Override
-    public void save(File saveFile){
+    public void save(File saveFile) throws IOException {
         saveCalledWith = saveFile;
     }
 }
