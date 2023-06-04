@@ -3,6 +3,7 @@ package com.behzad.finances.ui;
 import com.behzad.finances.domain.*;
 import com.behzad.finances.util.UnreachableCodeException;
 import com.behzad.finances.values.Dollars;
+import com.behzad.finances.values.SelfRenderable;
 import com.behzad.finances.values.Year;
 
 import javax.swing.table.*;

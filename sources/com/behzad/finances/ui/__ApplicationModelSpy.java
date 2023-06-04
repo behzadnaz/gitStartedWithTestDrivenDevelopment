@@ -1,27 +1,28 @@
 package com.behzad.finances.ui;
 
 import com.behzad.finances.values.Dollars;
+import com.behzad.finances.values.UserEnteredDollars;
 
 import java.io.File;
 
 public class __ApplicationModelSpy extends ApplicationModel {
-    public Dollars setStartingBalanceCalledWith;
-    public Dollars setCostBasisCalledWith;
-    public Dollars setYearlySpendingCalledWith;
+    public UserEnteredDollars setStartingBalanceCalledWith;
+    public UserEnteredDollars setCostBasisCalledWith;
+    public UserEnteredDollars setYearlySpendingCalledWith;
     public File saveCalledWith;
 
     @Override
-    public void setStartingBalance(Dollars startingBalance) {
+    public void setStartingBalance(UserEnteredDollars startingBalance) {
         setStartingBalanceCalledWith = startingBalance;
     }
 
     @Override
-    public void setStartingCostBasis(Dollars startingCostBasis) {
+    public void setStartingCostBasis(UserEnteredDollars startingCostBasis) {
         setCostBasisCalledWith = startingCostBasis;
     }
 
     @Override
-    public void setYearlySpending(Dollars yearlySpending) {
+    public void setYearlySpending(UserEnteredDollars yearlySpending) {
         setYearlySpendingCalledWith = yearlySpending;
     }
     @Override

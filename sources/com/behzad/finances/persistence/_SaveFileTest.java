@@ -1,5 +1,6 @@
 package com.behzad.finances.persistence;
 
+import com.behzad.finances.util.RequireException;
 import com.behzad.finances.values.UserEnteredDollars;
 import org.junit.Rule;
 import org.junit.*;
@@ -41,13 +42,29 @@ public class _SaveFileTest {
    @Test
    public void saveWritersFileContents() throws IOException {
         saveFile.save(new UserEnteredDollars("1.23"), new UserEnteredDollars("10.24"), new UserEnteredDollars("100.25"));
-        String expected = "com.behzad.finances,1\n1.23\n10.24\n100.25\n";
-        assertEquals(expected, readFile());
+        assertFileMatches("1.23","10.24", "100.25");
     }
     @Test
-    public void saveWritesStartingBalance(){
-        // saveFile.save(startingBalance);
-        // assertEquals("10000", saveFile.contents());
+    public void saveWritesOutUserEnteredValuesExactlyAsEntered() throws IOException{
+            saveFile.save(new UserEnteredDollars("foo"), new UserEnteredDollars(" bar"), new UserEnteredDollars("baz\t"));
+            assertFileMatches("foo"," bar", "baz\t");
+    }
+    @Test
+    public void saveHandlesDelimitersFeedInUserInput() throws IOException {
+        saveFile.save(new UserEnteredDollars("\n\n\n \\n"), anyValue,anyValue);
+        assertFileMatches("\\n\\n\\n \\\\n","any","any");
+    }
+
+    private void assertFileMatches(String expectedStartingBalance, String expectedCostBasis, String expectedYearlySpending) throws IOException {
+        assertFileMatches("file", expectedStartingBalance, expectedCostBasis,expectedYearlySpending);
+    }
+
+    private void assertFileMatches(String message, String expectedStartingBalance, String expectedCostBasis, String expectedYearlySpending) throws IOException {
+        String expected = "com.behzad.finances,1\n";
+        expected += expectedStartingBalance + "\n";
+        expected += expectedCostBasis + "\n";
+        expected += expectedYearlySpending + "\n";
+        assertEquals(message, expected,readFile());
     }
 
     private void writeFile(String text) throws IOException {
@@ -58,7 +75,6 @@ public class _SaveFileTest {
             writer.close();  //ToDO: Exception handling
         }
     }
-
     private String readFile() throws IOException {
         BufferedReader input = new BufferedReader(new FileReader(path));
         try {

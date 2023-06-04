@@ -1,7 +1,5 @@
 package com.behzad.finances.values;
 
-import com.behzad.finances.ui.SelfRenderable;
-
 
 public abstract class Dollars implements SelfRenderable {
 

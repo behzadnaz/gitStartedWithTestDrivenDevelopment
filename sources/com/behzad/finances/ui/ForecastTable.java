@@ -1,5 +1,7 @@
 package com.behzad.finances.ui;
 
+import com.behzad.finances.values.SelfRenderable;
+
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
