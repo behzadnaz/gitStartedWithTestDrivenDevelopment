@@ -118,27 +118,25 @@ public class _ApplicationFrameTest {
     @Test
     public void closeMenuItemShouldCloseTheWindow() throws Throwable{
         frame.setVisible(true);
-
         assertTrue("before disposal, frame is displayable", frame.isDisplayable());
+        //TODO: intermittent test failure where frame is not being disposed;tried invokeAndWait;did not work
+        //try next: run on event handler thread?
         closeMenuItem.doClick();
         assertTrue("frame should have been disposed",!frame.isDisplayable());
 
     }
     @Test
     public void saveAsMenuItemShouldShowSaveAsDialog() throws Throwable{
-
         final FileDialog saveAsDialog = saveAsDialog();
 
-        SwingUtilities.invokeAndWait(new Runnable() {
+        invokeAndWaitFor("Save as dialog", 1000, new Invocation(){
             @Override
             public void run() {
-               saveAsMenuItem.doClick();
+                saveAsMenuItem.doClick();
             }
-        });
 
-        assertEventuallyTrue("Save as dialog should be visible", 1000, new AsynchronousAssertion(){
             @Override
-            public boolean assertTrue() {
+            public boolean waitConditionFulfilled() {
                 return saveAsDialog.isVisible();
             }
         });
@@ -148,7 +146,6 @@ public class _ApplicationFrameTest {
 
     @Test
     public void saveAsDialogShouldTellApplicationModelToSaveWhenSaveButtonPushed(){
-
       saveAsDialog().setDirectory("/example");
       saveAsDialog().setFile("filename");
       frame.doSave();
@@ -156,21 +153,42 @@ public class _ApplicationFrameTest {
     }
     @Test
     public void saveAsDialogShouldHandleSaveExceptionGracefully(){
-        class ExceptionThrowingApplicationModel extends __ApplicationModelSpy {
+        //Assert that error dialog is visible and has correct error message
+        invokeAndWaitFor("Warning dialog", 1000, new Invocation() {
+            @Override
+            public void run(){
+                causeSaveException(new IOException("generic exception"));
+            }
+            @Override
+            boolean waitConditionFulfilled() {
+                Dialog dialog = warningDialogOrNullIfNotFound();
+                return dialog != null && dialog.isVisible();
+            }
+        });
+        JDialog dialogWindow = (JDialog) warningDialogOrNullIfNotFound();
+        JOptionPane dialogPane = (JOptionPane) dialogWindow.getContentPane().getComponent(0);
+
+        assertEquals("Warning dialog parent", frame, dialogWindow.getParent());
+        assertEquals("Warning dialog title", "Save File", dialogWindow.getTitle());
+        assertEquals("Warning dialog message", "Could not save file:generic Exception", dialogPane.getMessage());
+       assertEquals("Warning dialog type should be 'warning'",JOptionPane.WARNING_MESSAGE,dialogPane.getMessageType());
+        // assertEquals("Warning dialog title", "Save File", dialog.getTitle());
+    }
+    private void causeSaveException(final IOException exception){
+        ApplicationModel exceptionThrower = new __ApplicationModelSpy(){
             @Override
             public void save(File saveFile) throws IOException {
                 throw new IOException("generic Exception");
             }
-        }
-            frame = new ApplicationFrame(new ExceptionThrowingApplicationModel());
-            saveAsDialog().setDirectory("/example");
-            saveAsDialog().setFile("filename");
-            frame.doSave();
-            //TODO: Assert that we're getting a clean dialog on IOException
+        };
+        frame = new ApplicationFrame(exceptionThrower);
+
+        saveAsDialog().setDirectory("/example");
+        saveAsDialog().setFile("filename");
+        frame.doSave();
     }
     @Test
     public void saveAsDialogShouldDoNothingWhenCancelButtonPushed(){
-
         saveAsDialog().setDirectory(null);
         saveAsDialog().setFile(null);
         frame.doSave();
@@ -180,15 +198,30 @@ public class _ApplicationFrameTest {
     private FileDialog saveAsDialog() {
         return (FileDialog) frame.getOwnedWindows()[0];
     }
-
-    abstract class AsynchronousAssertion {
-        abstract boolean assertTrue();
-
+    //returns null if not found
+    private Dialog warningDialogOrNullIfNotFound(){
+        Window[] childWindows =frame.getOwnedWindows();
+        if(childWindows.length < 2) return null;
+        return (Dialog)childWindows[1];
     }
 
-    private void assertEventuallyTrue(String message, int timeout, AsynchronousAssertion check) {
+    //TODO: rename?
+    abstract class Invocation implements Runnable{
+        abstract public void run();
+
+        abstract boolean waitConditionFulfilled();
+    }
+
+    private void invokeAndWaitFor(String message, int timeout, final Invocation check) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                check.run();
+            }
+        });
+
         long startTime = new Date().getTime();
-        while(!check.assertTrue()){
+        while(!check.waitConditionFulfilled()){
             Thread.yield();
             long elapsedMilliseconds = new Date().getTime() - startTime;
             if(elapsedMilliseconds > timeout) fail(message + " within " + timeout + " milliseconds ");
