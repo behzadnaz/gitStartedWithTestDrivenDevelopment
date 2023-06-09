@@ -7,9 +7,6 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -117,115 +114,39 @@ public class _ApplicationFrameTest {
     }
     @Test
     public void closeMenuItemShouldCloseTheWindow() throws Throwable{
+        // This test sometimes fails saying frame is not disposed. Difficult reliably reproduce; seems to be race condition
+        // that appears when Swing tests are running slow.
+        // Tried invokeAndWait around doClick (did not work)
+        // Currently trying: run whole test on event handler thread using  invokeAndWait?
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                frame.setVisible(true);
+                assertTrue("before disposable, frame is displayable", frame.isDisplayable());
+                closeMenuItem.doClick();
+                assertTrue("frame should have been disposed", !frame.isDisplayable());
+            }
+        });
         frame.setVisible(true);
         assertTrue("before disposal, frame is displayable", frame.isDisplayable());
-        //TODO: intermittent test failure where frame is not being disposed;tried invokeAndWait;did not work
-        //try next: run on event handler thread?
         closeMenuItem.doClick();
         assertTrue("frame should have been disposed",!frame.isDisplayable());
-
     }
     @Test
     public void saveAsMenuItemShouldShowSaveAsDialog() throws Throwable{
-        final FileDialog saveAsDialog = saveAsDialog();
+        final FileDialog saveAsDialog = (SaveAsDialog) frame.getOwnedWindows()[0];
 
-        invokeAndWaitFor("Save as dialog", 1000, new Invocation(){
+        __Invocation.invokeAndWaitFor("Save as dialog", 1000, new __Invocation(){
             @Override
-            public void run() {
+            public void invoke() {
                 saveAsMenuItem.doClick();
             }
 
             @Override
-            public boolean waitConditionFulfilled() {
+            public boolean stopWaitingWhen() {
                 return saveAsDialog.isVisible();
             }
         });
-        assertEquals("Save as dialog mode should be 'save'", FileDialog.SAVE, saveAsDialog.getMode());
-        assertEquals("Save as dialog title", "Save as",  saveAsDialog.getTitle());
-    }
-
-    @Test
-    public void saveAsDialogShouldTellApplicationModelToSaveWhenSaveButtonPushed(){
-      saveAsDialog().setDirectory("/example");
-      saveAsDialog().setFile("filename");
-      frame.doSave();
-      assertEquals("applicationModel should be told to save",new File("/example/filename"), mockModel.saveCalledWith);
-    }
-    @Test
-    public void saveAsDialogShouldHandleSaveExceptionGracefully(){
-        //Assert that error dialog is visible and has correct error message
-        invokeAndWaitFor("Warning dialog", 1000, new Invocation() {
-            @Override
-            public void run(){
-                causeSaveException(new IOException("generic exception"));
-            }
-            @Override
-            boolean waitConditionFulfilled() {
-                Dialog dialog = warningDialogOrNullIfNotFound();
-                return dialog != null && dialog.isVisible();
-            }
-        });
-        JDialog dialogWindow = (JDialog) warningDialogOrNullIfNotFound();
-        JOptionPane dialogPane = (JOptionPane) dialogWindow.getContentPane().getComponent(0);
-
-        assertEquals("Warning dialog parent", frame, dialogWindow.getParent());
-        assertEquals("Warning dialog title", "Save File", dialogWindow.getTitle());
-        assertEquals("Warning dialog message", "Could not save file:generic Exception", dialogPane.getMessage());
-       assertEquals("Warning dialog type should be 'warning'",JOptionPane.WARNING_MESSAGE,dialogPane.getMessageType());
-        // assertEquals("Warning dialog title", "Save File", dialog.getTitle());
-    }
-    private void causeSaveException(final IOException exception){
-        ApplicationModel exceptionThrower = new __ApplicationModelSpy(){
-            @Override
-            public void save(File saveFile) throws IOException {
-                throw new IOException("generic Exception");
-            }
-        };
-        frame = new ApplicationFrame(exceptionThrower);
-
-        saveAsDialog().setDirectory("/example");
-        saveAsDialog().setFile("filename");
-        frame.doSave();
-    }
-    @Test
-    public void saveAsDialogShouldDoNothingWhenCancelButtonPushed(){
-        saveAsDialog().setDirectory(null);
-        saveAsDialog().setFile(null);
-        frame.doSave();
-        assertNull("application model should not have been told to save", mockModel.saveCalledWith);
-    }
-
-    private FileDialog saveAsDialog() {
-        return (FileDialog) frame.getOwnedWindows()[0];
-    }
-    //returns null if not found
-    private Dialog warningDialogOrNullIfNotFound(){
-        Window[] childWindows =frame.getOwnedWindows();
-        if(childWindows.length < 2) return null;
-        return (Dialog)childWindows[1];
-    }
-
-    //TODO: rename?
-    abstract class Invocation implements Runnable{
-        abstract public void run();
-
-        abstract boolean waitConditionFulfilled();
-    }
-
-    private void invokeAndWaitFor(String message, int timeout, final Invocation check) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                check.run();
-            }
-        });
-
-        long startTime = new Date().getTime();
-        while(!check.waitConditionFulfilled()){
-            Thread.yield();
-            long elapsedMilliseconds = new Date().getTime() - startTime;
-            if(elapsedMilliseconds > timeout) fail(message + " within " + timeout + " milliseconds ");
-        }
     }
 }
 

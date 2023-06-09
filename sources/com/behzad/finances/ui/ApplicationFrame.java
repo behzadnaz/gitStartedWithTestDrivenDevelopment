@@ -16,7 +16,7 @@ public class ApplicationFrame extends JFrame {
     public static final Point INITIAL_POSITION = new Point(400, 300);
     public static final Dimension INITIAL_SIZE = new Dimension(900,400);
     public ApplicationModel model;
-    private FileDialog saveAsDialog;
+    private SaveAsDialog saveAsDialog;
 
 
     public static void newWindow() {
@@ -44,7 +44,7 @@ public class ApplicationFrame extends JFrame {
         contentPane.add(BorderLayout.NORTH, configurationPanel());
 
         setJMenuBar(menuBar());
-        saveAsDialog = new FileDialog(ApplicationFrame.this, "Save as", FileDialog.SAVE);
+        saveAsDialog = new SaveAsDialog(ApplicationFrame.this, model);
 
     }
 
@@ -88,20 +88,9 @@ public class ApplicationFrame extends JFrame {
         return menuItem("Save As ...", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.SHIFT_MASK | InputEvent.META_MASK), new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveAsDialog.setVisible(true);
-                doSave();
+                saveAsDialog.displayModally();
             }
         });
-    }
-    //non-private for testing purposes
-    void doSave(){
-        try {
-            String directory = saveAsDialog.getDirectory();
-            String file = saveAsDialog.getFile();
-            if(file != null) model.save(new File(directory, file));
-        }catch (IOException e){
-           JOptionPane.showMessageDialog(this, "Could not save file:" + e.getLocalizedMessage(),"Save File", JOptionPane.WARNING_MESSAGE);
-        }
     }
 
     private JMenuItem menuItem(String name, KeyStroke accelerator, ActionListener action) {
@@ -109,5 +98,14 @@ public class ApplicationFrame extends JFrame {
         newMenuItem.setAccelerator(accelerator);
         newMenuItem.addActionListener(action);
         return newMenuItem;
+    }
+    void doSave(){
+        try {
+            String directory = saveAsDialog.getDirectory();
+            String file = saveAsDialog.getFile();
+            if(file != null) model.save(new File(directory, file));
+        }catch (IOException e){
+            JOptionPane.showMessageDialog(this, "Could not save file:" + e.getLocalizedMessage(),"Save File", JOptionPane.WARNING_MESSAGE);
+        }
     }
 }
