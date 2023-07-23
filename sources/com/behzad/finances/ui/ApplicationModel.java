@@ -3,7 +3,6 @@ package com.behzad.finances.ui;
 import com.behzad.finances.domain.*;
 import com.behzad.finances.persistence.SaveFile;
 import com.behzad.finances.values.*;
-import org.approvaltests.reporters.UseReporter;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,11 +26,15 @@ public class ApplicationModel {
     private UserEnteredDollars yearlySpending = DEFAULT_YEARLY_SPENDING;
 
     private StockMarketTableModel stockMarketTableModel = new StockMarketTableModel(stockMarketProjection());
+    private SaveFile saveFile;
 
     public StockMarketTableModel stockMarketTableModel() {
         return stockMarketTableModel;
     }
-
+    // ToDo: for testing only;delete
+    public ApplicationModel(){
+    }
+    public ApplicationModel(SaveFile mockSaveFile){}
     public void setStartingBalance(UserEnteredDollars startingBalance) {
         this.startingBalance = startingBalance;
         stockMarketTableModel.setProjection(stockMarketProjection());
@@ -57,9 +60,17 @@ public class ApplicationModel {
     public Dollars startingCostBasis(){return startingCostBasis;}
     public Dollars yearlySpending(){return yearlySpending; }
 
-    public void save(File saveFile) throws IOException{
-        System.out.println("save called " + saveFile );
-        new SaveFile(saveFile).save(startingBalance, startingCostBasis,yearlySpending);
+    public void save(File path) throws IOException{
+        this.saveFile = new SaveFile(path);
+        saveFile.save(new UserEnteredDollars(""), new UserEnteredDollars(""), new UserEnteredDollars(""));
     }
 
+    public File saveFilePathOrNullIfNotSaved() {
+        if(saveFile == null) return null;
+        else return saveFile.path();
+    }
+
+    public boolean fileHasEverBeenSaved() {
+        return saveFile.hasEverBeenSaved();
+    }
 }

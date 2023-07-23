@@ -1,6 +1,5 @@
 package com.behzad.finances.persistence;
 
-import com.behzad.finances.util.RequireException;
 import com.behzad.finances.values.UserEnteredDollars;
 import org.junit.Rule;
 import org.junit.*;
@@ -22,6 +21,30 @@ public class _SaveFileTest {
     public void setup(){
         path = new File(tempDir.getRoot(), "test file");
         saveFile = new SaveFile(path);
+    }
+    @Test
+    public void canRetrieveFileObject(){
+        assertEquals(path,saveFile.path());
+    }
+    @Test
+    public void hasSaved() throws IOException {
+        assertFalse("should not be saved before save() called", saveFile.hasEverBeenSaved());
+        saveFile.save(anyValue,anyValue,anyValue);
+        assertTrue("should be saved after saved called", saveFile.hasEverBeenSaved());
+    }
+    @Test
+    public void hasSavedNotTrueIfExceptionOccurredWhileSaving(){
+        try {
+            path.createNewFile();
+            path.setWritable(false);
+            saveFile.save(anyValue,anyValue,anyValue);
+            fail("expected IOException");
+        } catch (IOException e){
+            assertFalse("should not be saved", saveFile.hasEverBeenSaved());
+        }
+        finally {
+            path.setWritable(true);
+        }
     }
     @Test
     public void saveCreatesFile() throws IOException {

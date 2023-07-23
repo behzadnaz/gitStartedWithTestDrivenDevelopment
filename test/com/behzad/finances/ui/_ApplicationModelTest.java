@@ -2,9 +2,14 @@ package com.behzad.finances.ui;
 
 import com.behzad.finances.domain.StockMarketProjection;
 import com.behzad.finances.domain.StockMarketYear;
+import com.behzad.finances.persistence.SaveFile;
 import com.behzad.finances.values.UserEnteredDollars;
 import com.behzad.finances.values.ValidDollars;
 import org.junit.*;
+
+import java.io.File;
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 
 public class _ApplicationModelTest {
@@ -45,6 +50,39 @@ public class _ApplicationModelTest {
     public void changingYearlySpendingShouldChangeStockMarketTableModel(){
         model.setYearlySpending(new UserEnteredDollars("423"));
         assertEquals(new ValidDollars(423), model.stockMarketTableModel().yearlySpending());
+    }
+    @Test
+    public void nameOfSaveFile() throws IOException{
+        assertNull("should not have save file if save not called", model.saveFilePathOrNullIfNotSaved());
+        File expectedFile = new File("foo");
+        model.save(expectedFile);
+        assertEquals("should have file after save called", expectedFile, model.saveFilePathOrNullIfNotSaved());
+    }
+    @Test
+    public void save() throws IOException{
+        model.save(new File("foo"));
+        assertTrue("file should have been saved", model.fileHasEverBeenSaved());
+    }
+
+    @Test
+    @Ignore
+    //ToDO
+    public void isave() throws IOException {
+        class  SaveFileSpy extends SaveFile{
+            public boolean saveCalled = false;
+
+            public SaveFileSpy(){
+                super(null);
+            }
+
+            public void save(UserEnteredDollars startingBalance, UserEnteredDollars costBasis, UserEnteredDollars yearlySpending){
+                this.saveCalled = true;
+            }
+        }
+        SaveFileSpy mockSaveFile = new SaveFileSpy();
+        model = new ApplicationModel(mockSaveFile);
+        model.save(null);
+        assertTrue("saveFile.save() should have been called", mockSaveFile.saveCalled);
     }
 
 }
